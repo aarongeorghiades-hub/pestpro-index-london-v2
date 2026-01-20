@@ -13,9 +13,9 @@ export default function Home() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-0 bg-white rounded-full px-6 py-3" style={{width: '210px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Image
-              src="/pestpro-logo.png"
+              src="/logo-header.png"
               alt="PestPro Index"
-              width={120}
+              width={180}
               height={60}
               className="h-auto"
             />

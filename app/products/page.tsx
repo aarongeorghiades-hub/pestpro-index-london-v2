@@ -36,9 +36,9 @@ export default function ProductsPage() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-0 bg-white rounded-full px-6 py-3" style={{width: '210px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Image
-              src="/pestpro-logo.png"
+              src="/logo-header.png"
               alt="PestPro Index"
-              width={120}
+              width={180}
               height={60}
               className="h-auto"
             />
@@ -70,16 +70,6 @@ export default function ProductsPage() {
         </div>
         
         <div className="relative max-w-4xl mx-auto px-4">
-          {/* Coming Soon Badge */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-100 to-amber-200 text-amber-900 px-6 py-3 rounded-full text-sm font-bold shadow-lg border-2 border-amber-300">
-              <svg className="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z" />
-              </svg>
-              <span>FREE PRODUCT GUIDE</span>
-            </div>
-          </div>
-
           {/* Main Heading - WHITE and HUGE */}
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[0.9] tracking-tight text-center">
             Product<br />Recommendations

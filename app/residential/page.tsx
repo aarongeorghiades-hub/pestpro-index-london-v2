@@ -195,7 +195,7 @@ export default function ResidentialPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link href="/" className="flex-shrink-0">
             <Image 
-              src="/logo.svg" 
+              src="/logo-header.png" 
               alt="PestPro Index Logo" 
               width={180} 
               height={50}
@@ -212,7 +212,7 @@ export default function ResidentialPage() {
                 className={`
                   px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200
                   ${pathname === item.href
-                    ? 'bg-blue-700 text-white'
+                    ? 'bg-[#1e3a8a] text-white'
                     : 'bg-transparent text-white hover:border-white/60 hover:bg-white/10'
                   }
                 `}
@@ -251,57 +251,80 @@ export default function ResidentialPage() {
         </div>
       </section>
 
-      {/* PDF SECTION - £1.99 GUIDE */}
+      {/* PDF & PRODUCTS SECTION - SIDE BY SIDE */}
       <section className="relative bg-gradient-to-br from-gray-50 to-white py-16 border-b-2 border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Title */}
-          <div className="mb-8">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">
-              DIY or Professional? Make the Right Call.
-            </h2>
-            <p className="text-xl text-gray-600 leading-relaxed mb-6">
-              You've got a pest problem. The question isn't "can I handle this?" — it's "SHOULD I handle this?"
-            </p>
-            <p className="text-lg text-gray-700 leading-relaxed">
-              Our Residential DIY Decision Guide (£1.99) helps you decide by showing:
-            </p>
-          </div>
+          {/* Two-Column Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            {/* LEFT: PDF GUIDE */}
+            <div className="text-center">
+              <h2 className="text-4xl font-black text-gray-900 mb-4">
+                DIY or Professional? Make the Right Call.
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed mb-6">
+                You've got a pest problem. The question isn't "can I handle this?" — it's "SHOULD I handle this?"
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                Our Residential DIY Decision Guide (£1.99) helps you decide by showing:
+              </p>
 
-          {/* 4 Bullets */}
-          <div className="max-w-2xl mx-auto text-left mb-8 space-y-3">
-            <div className="flex items-start gap-3">
-              <span className="text-blue-600 text-xl mt-1">✓</span>
-              <p className="text-gray-700">When DIY typically works (and saves you money)</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-blue-600 text-xl mt-1">✓</span>
-              <p className="text-gray-700">When DIY usually fails (so you don't waste time)</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-blue-600 text-xl mt-1">✓</span>
-              <p className="text-gray-700">The "stop signals" that tell you it's time to call a professional</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-blue-600 text-xl mt-1">✓</span>
-              <p className="text-gray-700">What actually works (and what wastes money) for each pest type</p>
-            </div>
-          </div>
+              {/* 4 Bullets */}
+              <div className="max-w-2xl mx-auto text-left mb-8 space-y-3">
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-xl mt-1">✓</span>
+                  <p className="text-gray-700">When DIY typically works (and saves you money)</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-xl mt-1">✓</span>
+                  <p className="text-gray-700">When DIY usually fails (so you don't waste time)</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-xl mt-1">✓</span>
+                  <p className="text-gray-700">The "stop signals" that tell you it's time to call a professional</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-xl mt-1">✓</span>
+                  <p className="text-gray-700">What actually works (and what wastes money) for each pest type</p>
+                </div>
+              </div>
 
-          {/* CTA */}
-          <div className="text-center">
-            <p className="text-sm text-gray-500 mb-4">
-              Make an informed decision before you spend £100+ on the wrong approach.
-            </p>
-            <Link 
-              href="/products"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white text-lg font-bold rounded-xl hover:from-[#2563eb] hover:to-[#3b82f6] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
-            >
-              <span className="text-2xl">📄</span>
-              <span>Get the Guide - £1.99</span>
-            </Link>
-          </div>
+              {/* CTA */}
+              <div className="text-center">
+                <p className="text-sm text-gray-500 mb-4">
+                  Make an informed decision before you spend £100+ on the wrong approach.
+                </p>
+                <Link 
+                  href="https://pestproindex.lemonsqueezy.com/checkout/buy/8d8b4f4a-a913-48b3-bf8d-dfcaf6fcb5d6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white text-lg font-bold rounded-xl hover:from-[#2563eb] hover:to-[#3b82f6] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                >
+                  <span className="text-2xl">📄</span>
+                  <span>Get the Guide - £1.99</span>
+                </Link>
+              </div>
+            </div>
 
+            {/* RIGHT: PRODUCTS LINK */}
+            <div className="text-center flex flex-col justify-center bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-200">
+              <h2 className="text-4xl font-black text-gray-900 mb-4">
+                Need DIY Products?
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed mb-8">
+                Browse our curated selection of the most popular pest control products available today, organized by pest type. Includes user ratings and direct Amazon purchase links.
+              </p>
+              <Link 
+                href="/products"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white text-lg font-bold rounded-xl hover:from-[#2563eb] hover:to-[#3b82f6] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 mx-auto"
+              >
+                View Products Page
+                <span>→</span>
+              </Link>
+            </div>
+
+          </div>
         </div>
       </section>
 
@@ -315,7 +338,7 @@ export default function ResidentialPage() {
               Featured Providers
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Every provider sourced from BPCA and TrustMark directories. No judgment, no endorsement—just provider-stated facts. You decide.
+              See how our featured provider of the week successfully tackled a tough pest problem in London.
             </p>
           </div>
 
@@ -324,7 +347,18 @@ export default function ResidentialPage() {
             {providers
               .filter(p => 
                 p.google_rating && p.google_rating >= 4.8 && 
-                p.google_review_count && p.google_review_count >= 30
+                p.google_review_count && p.google_review_count >= 30 &&
+                p.address && (
+                  p.address.toLowerCase().includes('london') ||
+                  p.address.toLowerCase().includes('sw') ||
+                  p.address.toLowerCase().includes('se') ||
+                  p.address.toLowerCase().includes('nw') ||
+                  p.address.toLowerCase().includes('ne') ||
+                  p.address.toLowerCase().includes('ec') ||
+                  p.address.toLowerCase().includes('wc') ||
+                  p.address.toLowerCase().includes('e1') ||
+                  p.address.toLowerCase().includes('w1')
+                )
               )
               .slice(0, 8)
               .map(provider => (
@@ -659,25 +693,6 @@ export default function ResidentialPage() {
             </main>
 
           </div>
-        </div>
-      </section>
-
-      {/* PRODUCTS PAGE LINK - BOTTOM */}
-      <section className="relative bg-gray-50 py-12 border-t-2 border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            Looking for Product Recommendations?
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Visit our Products page to see the most popular pest control products available today, organized by pest type. Includes user ratings and direct purchase links.
-          </p>
-          <Link 
-            href="/products"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold text-lg"
-          >
-            View Products Page
-            <span>→</span>
-          </Link>
         </div>
       </section>
 

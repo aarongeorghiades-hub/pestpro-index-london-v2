@@ -223,7 +223,7 @@ export default function CommercialPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link href="/" className="flex-shrink-0">
             <Image 
-              src="/logo-horizontal-white-bg.png" 
+              src="/logo-header.png" 
               alt="PestPro Index Logo" 
               width={180} 
               height={50}
@@ -256,8 +256,8 @@ export default function CommercialPage() {
       <section className="relative h-[500px] overflow-hidden">
         <div className="absolute inset-0">
           <Image 
-            src="/commercial-hero.png" 
-            alt="Commercial pest control technician" 
+            src="/kitchen-cleaning.png" 
+            alt="Commercial pest control kitchen" 
             fill
             className="object-cover opacity-95"
             priority
@@ -271,7 +271,7 @@ export default function CommercialPage() {
             Commercial Pest Control
           </h1>
           <p className="text-3xl md:text-4xl mb-6 font-extralight tracking-[0.15em] text-white drop-shadow-[0_8px_20px_rgba(0,0,0,0.9)]">
-            245 Verified Providers in London
+            457 Verified Providers in London
           </p>
           <p className="text-xl text-white font-semibold max-w-3xl leading-relaxed drop-shadow-[0_6px_16px_rgba(0,0,0,0.85)] opacity-95">
             Find certified commercial pest control providers with advanced filtering by certifications, capabilities, and sectors.
@@ -336,6 +336,81 @@ export default function CommercialPage() {
                       {provider.rsph_level_2 && (
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded font-semibold">RSPH</span>
                       )}
+                    </div>
+
+                    {/* Contact Buttons */}
+                    <div className="space-y-2">
+                      {provider.website && (
+                        <a 
+                          href={provider.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-center px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold rounded-lg transition-all shadow-md"
+                        >
+                          Visit Website
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+
+        </div>
+      </section>
+
+      {/* MOST CERTIFIED PROVIDERS SECTION */}
+      <section className="relative bg-gradient-to-br from-blue-50 to-white py-16 border-b-2 border-blue-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Title */}
+          <div className="text-center mb-12">
+            <h2 className="text-5xl font-black text-gray-900 mb-4">
+              Most Certified Providers
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Providers with the highest number of verified certifications and credentials
+            </p>
+          </div>
+
+          {/* 4-COLUMN GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {providers
+              .sort((a, b) => getQualityScore(b) - getQualityScore(a))
+              .slice(0, 8)
+              .map(provider => {
+                const score = getQualityScore(provider);
+                const badge = getQualityBadge(score);
+                return (
+                  <div 
+                    key={provider.provider_id} 
+                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border-2 border-blue-400"
+                  >
+                    
+                    {/* Elite Badge */}
+                    <div className="inline-block px-3 py-1.5 bg-gradient-to-r from-blue-400 to-blue-500 text-blue-900 text-xs font-bold rounded-full mb-3 uppercase tracking-wide">
+                      Top Certified
+                    </div>
+
+                    {/* Company Name */}
+                    <h3 className="font-black text-base text-gray-900 mb-3 leading-tight line-clamp-2">
+                      {provider.provider_name}
+                    </h3>
+
+                    {/* Certification Count */}
+                    <div className="mb-4 flex items-center gap-2">
+                      <span className="text-3xl">🏅</span>
+                      <div>
+                        <p className="text-2xl font-black text-blue-900">{score}</p>
+                        <p className="text-xs text-gray-600">Certifications</p>
+                      </div>
+                    </div>
+
+                    {/* Quality Badge */}
+                    <div className="mb-4">
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${badge.color}`}>
+                        {badge.label}
+                      </span>
                     </div>
 
                     {/* Contact Buttons */}
@@ -721,7 +796,7 @@ export default function CommercialPage() {
                   {/* Sort and Results Info */}
                   <div className="flex justify-between items-center mb-8">
                     <p className="text-gray-600 font-medium">
-                      Showing {paginatedProviders.length} of {filteredProviders.length} providers
+                      Showing {filteredProviders.length} providers
                     </p>
                     <select
                       value={sortBy}
@@ -738,7 +813,7 @@ export default function CommercialPage() {
 
                   {/* Provider Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    {paginatedProviders.map(provider => {
+                    {filteredProviders.map(provider => {
                       const score = getQualityScore(provider);
                       const badge = getQualityBadge(score);
                       const isTrophy = score >= 30;
@@ -771,25 +846,6 @@ export default function CommercialPage() {
                       );
                     })}
                   </div>
-
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div className="flex justify-center gap-2">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          className={`px-4 py-2 rounded font-semibold transition ${
-                            currentPage === page
-                              ? 'bg-[#1e3a8a] text-white'
-                              : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </>
               )}
             </main>
