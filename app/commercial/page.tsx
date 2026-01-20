@@ -26,10 +26,7 @@ export default function CommercialPage() {
   const [filterCounts, setFilterCounts] = useState<FilterCounts>({});
   const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState('quality');
-  const [currentPage, setCurrentPage] = useState(1);
   const pathname = usePathname();
-
-  const itemsPerPage = 12;
 
   // Navigation items
   const navItems = [
@@ -198,12 +195,7 @@ export default function CommercialPage() {
     applyFilters(providers, new Set());
   };
 
-  // Pagination
-  const totalPages = Math.ceil(filteredProviders.length / itemsPerPage);
-  const paginatedProviders = filteredProviders.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+
 
   if (loading) {
     return (
