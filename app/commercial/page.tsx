@@ -174,7 +174,6 @@ export default function CommercialPage() {
     }
 
     setFilteredProviders(filtered);
-    setCurrentPage(1);
   };
 
   // Handle filter change

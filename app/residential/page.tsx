@@ -211,7 +211,7 @@ export default function ResidentialPage() {
                 href={item.href}
                 className={`
                   px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200
-                  ${pathname === item.href
+                   ${pathname === item.href
                     ? 'bg-[#1e3a8a] text-white'
                     : 'bg-transparent text-white hover:border-white/60 hover:bg-white/10'
                   }
