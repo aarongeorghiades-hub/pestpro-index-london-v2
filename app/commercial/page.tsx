@@ -244,16 +244,16 @@ export default function CommercialPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative h-[500px] overflow-hidden">
+      <section className="relative h-[350px] overflow-hidden">
         <div className="absolute inset-0">
           <Image 
             src="/kitchen-cleaning.png" 
             alt="Commercial pest control kitchen" 
             fill
-            className="object-cover opacity-95"
+            className="object-cover opacity-90 scale-125"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/50 via-[#2563eb]/45 to-[#1e3a8a]/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/60 via-[#2563eb]/55 to-[#1e3a8a]/60"></div>
         </div>
         
         {/* CENTERED HERO CONTENT */}
@@ -277,10 +277,10 @@ export default function CommercialPage() {
           {/* Section Title */}
           <div className="text-center mb-12">
             <h2 className="text-5xl font-black text-gray-900 mb-4">
-              Featured Providers
+              Featured Commercial Providers
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Top-rated commercial pest control providers with verified certifications and comprehensive capabilities.
+              Top-rated commercial pest control providers with comprehensive capabilities.
             </p>
           </div>
 

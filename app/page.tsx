@@ -11,12 +11,12 @@ export default function Home() {
       <header className="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-0 bg-white rounded-full px-6 py-3" style={{width: '210px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Link href="/" className="flex items-center gap-0 bg-white rounded-full px-4 py-2">
             <Image
               src="/logo-header.png"
               alt="PestPro Index"
-              width={180}
-              height={60}
+              width={160}
+              height={50}
               className="h-auto"
             />
           </Link>
@@ -176,7 +176,6 @@ export default function Home() {
             We source providers from BPCA and TrustMark directories. We preserve evidence, not opinions. No endorsements, no guarantees, no hidden agendas.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <div className="bg-gray-500/50 px-6 py-3 rounded-full font-semibold">BPCA Sourced</div>
             <div className="bg-gray-500/50 px-6 py-3 rounded-full font-semibold">No Booking Fees</div>
             <div className="bg-gray-500/50 px-6 py-3 rounded-full font-semibold">Direct Contact</div>
             <div className="bg-gray-500/50 px-6 py-3 rounded-full font-semibold">Transparent Data</div>

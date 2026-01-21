@@ -245,7 +245,7 @@ export default function ResidentialPage() {
           <p className="text-3xl md:text-4xl mb-6 font-extralight tracking-[0.15em] text-white drop-shadow-[0_8px_20px_rgba(0,0,0,0.9)]">
             481 Verified Providers in London
           </p>
-          <p className="text-xl text-white font-semibold max-w-3xl leading-relaxed drop-shadow-[0_6px_16px_rgba(0,0,0,0.85)] opacity-95">
+          <p className="text-xl text-white font-bold max-w-3xl leading-relaxed drop-shadow-[0_8px_24px_rgba(0,0,0,0.95)]">
             Filter by pest type and service features across our complete directory. 68% of providers have verified Google Reviews. No endorsements, no commissions—just transparent, provider-stated information.
           </p>
         </div>
@@ -308,18 +308,40 @@ export default function ResidentialPage() {
             </div>
 
             {/* RIGHT: PRODUCTS LINK */}
-            <div className="text-center flex flex-col justify-center bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-200">
-              <h2 className="text-4xl font-black text-gray-900 mb-4">
-                Need DIY Products?
+            <div className="text-center flex flex-col justify-center">
+              <h2 className="text-4xl font-black text-gray-900 mb-6">
+                DIY Solutions at Your Fingertips
               </h2>
-              <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                Browse our curated selection of the most popular pest control products available today, organized by pest type. Includes user ratings and direct Amazon purchase links.
+              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                Discover the most effective pest control products recommended by professionals, organized by pest type.
               </p>
+
+              {/* 4 Checkmark Benefits */}
+              <div className="max-w-2xl mx-auto text-left mb-8 space-y-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                  <p className="text-gray-700 text-lg">Curated products proven to work for each pest type</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                  <p className="text-gray-700 text-lg">Real user ratings and verified reviews</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                  <p className="text-gray-700 text-lg">Direct Amazon purchase links for instant delivery</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                  <p className="text-gray-700 text-lg">Expert guidance on which products actually work</p>
+                </div>
+              </div>
+
+              {/* CTA */}
               <Link 
                 href="/products"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white text-lg font-bold rounded-xl hover:from-[#2563eb] hover:to-[#3b82f6] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 mx-auto"
               >
-                View Products Page
+                Browse Products
                 <span>→</span>
               </Link>
             </div>
@@ -626,6 +648,13 @@ export default function ResidentialPage() {
                       </label>
                     ))}
                   </div>
+                </div>
+
+                {/* Filter Disclaimer */}
+                <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                  <p className="text-xs text-amber-900 leading-relaxed">
+                    <span className="font-semibold">Filter Note:</span> Filter results show data available from our research. If a provider doesn't appear in a filter, it doesn't mean they lack that certification or service—only that this information wasn't available in our data sources. Always confirm details directly with providers.
+                  </p>
                 </div>
 
               </div>
