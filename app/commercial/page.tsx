@@ -244,16 +244,16 @@ export default function CommercialPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative h-[400px] overflow-hidden">
+      <section className="relative h-[550px] overflow-hidden">
         <div className="absolute inset-0">
           <Image 
             src="/kitchen-cleaning.png" 
             alt="Commercial pest control kitchen" 
             fill
-            className="object-cover opacity-90"
+            className="object-cover object-center opacity-95"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/60 via-[#2563eb]/55 to-[#1e3a8a]/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/40 via-[#2563eb]/35 to-[#1e3a8a]/40"></div>
         </div>
         
         {/* CENTERED HERO CONTENT */}
