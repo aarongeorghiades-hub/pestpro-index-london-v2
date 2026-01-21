@@ -157,7 +157,7 @@ export default function ResidentialPage() {
     { href: '/residential', label: 'Residential' },
     { href: '/commercial', label: 'Commercial' },
     { href: '/professionals', label: 'Professionals' },
-    { href: '/products', label: 'Products' },
+    { href: '/products', label: 'Home Products' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];
@@ -259,34 +259,36 @@ export default function ResidentialPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* LEFT: PDF GUIDE */}
-            <div className="text-center">
-              <h2 className="text-4xl font-black text-gray-900 mb-4">
-                DIY or Professional? Make the Right Call.
-              </h2>
-              <p className="text-xl text-gray-600 leading-relaxed mb-6">
-                You've got a pest problem. The question isn't "can I handle this?" — it's "SHOULD I handle this?"
-              </p>
-              <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                Our Residential DIY Decision Guide (£1.99) helps you decide by showing:
-              </p>
+            <div className="text-center flex flex-col justify-between h-full">
+              <div>
+                <h2 className="text-4xl font-black text-gray-900 mb-4">
+                  DIY or Professional? Make the Right Call.
+                </h2>
+                <p className="text-xl text-gray-600 leading-relaxed mb-6">
+                  You've got a pest problem. The question isn't "can I handle this?" — it's "SHOULD I handle this?"
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                  Our Residential DIY Decision Guide (£1.99) helps you decide by showing:
+                </p>
 
-              {/* 4 Bullets */}
-              <div className="max-w-2xl mx-auto text-left mb-8 space-y-3">
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-xl mt-1">✓</span>
-                  <p className="text-gray-700">When DIY typically works (and saves you money)</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-xl mt-1">✓</span>
-                  <p className="text-gray-700">When DIY usually fails (so you don't waste time)</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-xl mt-1">✓</span>
-                  <p className="text-gray-700">The "stop signals" that tell you it's time to call a professional</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-xl mt-1">✓</span>
-                  <p className="text-gray-700">What actually works (and what wastes money) for each pest type</p>
+                {/* 4 Bullets */}
+                <div className="max-w-2xl mx-auto text-left mb-8 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl mt-1">✓</span>
+                    <p className="text-gray-700">When DIY typically works (and saves you money)</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl mt-1">✓</span>
+                    <p className="text-gray-700">When DIY usually fails (so you don't waste time)</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl mt-1">✓</span>
+                    <p className="text-gray-700">The "stop signals" that tell you it's time to call a professional</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl mt-1">✓</span>
+                    <p className="text-gray-700">What actually works (and what wastes money) for each pest type</p>
+                  </div>
                 </div>
               </div>
 
@@ -308,31 +310,33 @@ export default function ResidentialPage() {
             </div>
 
             {/* RIGHT: PRODUCTS LINK */}
-            <div className="text-center flex flex-col justify-center">
-              <h2 className="text-4xl font-black text-gray-900 mb-6">
-                DIY Solutions at Your Fingertips
-              </h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                Discover the most effective pest control products recommended by professionals, organized by pest type.
-              </p>
+            <div className="text-center flex flex-col justify-between h-full">
+              <div>
+                <h2 className="text-4xl font-black text-gray-900 mb-6">
+                  DIY Solutions at Your Fingertips
+                </h2>
+                <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                  Discover the most effective pest control products recommended by professionals, organized by pest type.
+                </p>
 
-              {/* 4 Checkmark Benefits */}
-              <div className="max-w-2xl mx-auto text-left mb-8 space-y-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
-                  <p className="text-gray-700 text-lg">Curated products proven to work for each pest type</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
-                  <p className="text-gray-700 text-lg">Real user ratings and verified reviews</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
-                  <p className="text-gray-700 text-lg">Direct Amazon purchase links for instant delivery</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
-                  <p className="text-gray-700 text-lg">Expert guidance on which products actually work</p>
+                {/* 4 Checkmark Benefits */}
+                <div className="max-w-2xl mx-auto text-left mb-8 space-y-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                    <p className="text-gray-700 text-lg">Curated products proven to work for each pest type</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                    <p className="text-gray-700 text-lg">Real user ratings and verified reviews</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                    <p className="text-gray-700 text-lg">Direct Amazon purchase links for instant delivery</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-blue-600 text-2xl mt-0 flex-shrink-0">✓</span>
+                    <p className="text-gray-700 text-lg">Expert guidance on which products actually work</p>
+                  </div>
                 </div>
               </div>
 
@@ -359,9 +363,6 @@ export default function ResidentialPage() {
             <h2 className="text-5xl font-black text-gray-900 mb-4">
               Featured Providers
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See how our featured provider of the week successfully tackled a tough pest problem in London.
-            </p>
           </div>
 
           {/* 4-COLUMN GRID - NO AI IMAGE */}
@@ -460,7 +461,7 @@ export default function ResidentialPage() {
               Featured Provider Story
             </h2>
             <p className="text-xl text-gray-600 leading-relaxed mb-4">
-              See how London's pest control providers solve real problems.
+              See how our featured provider of the week successfully tackled a tough pest problem in London.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
               Each month, we publish a detailed case study: the customer's challenge, the provider's approach, and the outcome. No fluff—just practical insights into what professional pest control actually looks like.

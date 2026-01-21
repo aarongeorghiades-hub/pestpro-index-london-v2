@@ -34,12 +34,12 @@ export default function ProductsPage() {
       {/* Header */}
       <header className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 border-b border-blue-700 shadow-xl">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-0 bg-white rounded-full px-6 py-3" style={{width: '210px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Link href="/" className="flex items-center gap-0 bg-white rounded-full px-3 py-1">
             <Image
               src="/logo-header.png"
               alt="PestPro Index"
-              width={180}
-              height={60}
+              width={140}
+              height={45}
               className="h-auto"
             />
           </Link>

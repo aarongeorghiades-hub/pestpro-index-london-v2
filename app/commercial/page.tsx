@@ -34,7 +34,7 @@ export default function CommercialPage() {
     { href: '/residential', label: 'Residential' },
     { href: '/commercial', label: 'Commercial' },
     { href: '/professionals', label: 'Professionals' },
-    { href: '/products', label: 'Products' },
+    { href: '/products', label: 'Home Products' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];
@@ -244,13 +244,13 @@ export default function CommercialPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative h-[350px] overflow-hidden">
+      <section className="relative h-[400px] overflow-hidden">
         <div className="absolute inset-0">
           <Image 
             src="/kitchen-cleaning.png" 
             alt="Commercial pest control kitchen" 
             fill
-            className="object-cover opacity-90 scale-125"
+            className="object-cover opacity-90"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/60 via-[#2563eb]/55 to-[#1e3a8a]/60"></div>
@@ -520,70 +520,23 @@ export default function CommercialPage() {
         </div>
       </section>
 
-      {/* SECTION 2: TOP-RATED PROVIDERS */}
-      <section className="relative bg-gradient-to-br from-white to-gray-50 py-16 border-b-2 border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Title */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">
-              Most Certified Providers
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Providers with comprehensive certifications across multiple categories
-            </p>
-          </div>
 
-          {/* Top 8 High-Quality Cards (4 columns) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {providers
-              .filter(p => getQualityScore(p) >= 30)
-              .sort((a, b) => getQualityScore(b) - getQualityScore(a))
-              .slice(0, 8)
-              .map(provider => {
-                const score = getQualityScore(provider);
-                const badge = getQualityBadge(score);
-                return (
-                  <div 
-                    key={provider.provider_id} 
-                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 border-l-4 border-[#1e3a8a]"
-                  >
-                    
-                    {/* Company Name */}
-                    <h3 className="font-bold text-base text-gray-900 mb-2 leading-tight line-clamp-2">
-                      {provider.provider_name}
-                    </h3>
 
-                    {/* Quality Badge */}
-                    <div className="mb-4">
-                      <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${badge.color}`}>
-                        {badge.label}
-                      </span>
-                    </div>
-
-                    {/* Quality Score */}
-                    <p className="text-sm text-gray-600 mb-4">
-                      Quality Score: <span className="font-bold">{score}/48</span>
-                    </p>
-
-                    {/* Contact */}
-                    <div className="space-y-2">
-                      {provider.website && (
-                        <a 
-                          href={provider.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors"
-                        >
-                          Visit Website
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
-
+      {/* PRODUCTS LINK SECTION */}
+      <section className="relative bg-gradient-to-br from-blue-50 to-white py-12 border-b-2 border-blue-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">
+            Looking for Commercial Pest Control Products?
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Visit our Commercial Products page to see professional-grade pest control products for businesses, organized by pest type and facility needs. Includes user ratings and direct purchase links.
+          </p>
+          <Link 
+            href="/products"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white font-bold rounded-lg hover:from-[#2563eb] hover:to-[#3b82f6] transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            View Products Page →
+          </Link>
         </div>
       </section>
 
