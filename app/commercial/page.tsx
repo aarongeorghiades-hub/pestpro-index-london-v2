@@ -52,7 +52,7 @@ export default function CommercialPage() {
       { key: 'npta_member', label: 'NPTA Member' },
       { key: 'rsph_level_2', label: 'RSPH Level 2' },
       { key: 'safe_contractor', label: 'Safe Contractor' },
-      { key: 'chas', label: 'CHAS' },
+      { key: 'chas_accredited', label: 'CHAS' },
       { key: 'basis_prompt', label: 'Basis Prompt' },
       { key: 'cepa_certified', label: 'CEPA Certified' },
       { key: 'iso_9001', label: 'ISO 9001' },
