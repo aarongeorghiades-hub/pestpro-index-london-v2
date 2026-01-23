@@ -265,14 +265,14 @@ export default function CommercialPage() {
             src="/kitchen-cleaning.png"
             alt="Commercial pest control kitchen"
             fill
-            className="object-cover opacity-95"
+            className="object-contain opacity-95"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/50 via-[#2563eb]/45 to-[#1e3a8a]/50"></div>
         </div>
         <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-          <h1 className="text-5xl font-black text-white mb-4 drop-shadow-lg">Commercial Pest Control Solutions</h1>
-          <p className="text-xl text-blue-100 drop-shadow-md">Professional pest management for businesses, facilities, and multi-site operations</p>
+          <h1 className="text-7xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] text-white drop-shadow-[0_12px_36px_rgba(0,0,0,0.95)]">Commercial Pest Control Solutions</h1>
+          <p className="text-3xl md:text-4xl mb-6 font-bold tracking-[0.15em] text-white drop-shadow-[0_8px_20px_rgba(0,0,0,0.9)]">457 Verified Providers in London</p>
         </div>
       </section>
 
@@ -458,6 +458,62 @@ export default function CommercialPage() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* SAAS PRODUCT SECTION */}
+      <section className="relative bg-gradient-to-br from-blue-50 to-white py-16 border-t-2 border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-gray-900 mb-4">
+              Pest Control Compliance Tracker
+            </h2>
+            <p className="text-lg text-gray-600">
+              Digital audit trail for your commercial pest control operations
+            </p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-purple-600">
+            <div className="mb-6">
+              <div className="inline-block px-4 py-2 bg-purple-100 text-purple-800 text-sm font-bold rounded-full mb-4">
+                COMING SOON
+              </div>
+              <h3 className="text-2xl font-black text-gray-900 mb-4">
+                Never Miss a Compliance Audit Again
+              </h3>
+            </div>
+            
+            <p className="text-gray-700 mb-6 leading-relaxed">
+              Track every pest control activity across your facilities. Document which providers you use, their credentials, work completed, recommendations made, and compliance with regulatory and health & safety requirements.
+            </p>
+            
+            <div className="space-y-3 mb-8">
+              <div className="flex items-start gap-3">
+                <span className="text-purple-600 text-lg mt-0.5">✓</span>
+                <p className="text-gray-700">Complete audit trail of all pest control work</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-purple-600 text-lg mt-0.5">✓</span>
+                <p className="text-gray-700">Provider credentials and certifications tracking</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-purple-600 text-lg mt-0.5">✓</span>
+                <p className="text-gray-700">Health & safety compliance documentation</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-purple-600 text-lg mt-0.5">✓</span>
+                <p className="text-gray-700">Multi-site reporting and management</p>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <div className="inline-block px-8 py-3 bg-gray-300 text-gray-600 font-bold rounded-lg cursor-not-allowed">
+                Coming Soon - Join Waitlist
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 

@@ -120,30 +120,7 @@ export default function CommercialProductsPage() {
         </div>
       </div>
 
-      {/* Newsletter Signup */}
-      <div className="bg-gradient-to-r from-blue-50 to-blue-100 py-12 mb-16">
-        <div className="max-w-2xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Get Commercial Product Updates</h2>
-          <p className="text-gray-700 mb-6">Subscribe to receive new commercial product recommendations and bulk ordering guides</p>
-          <form onSubmit={handleSubmit} className="flex gap-3">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@business.com"
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <button
-              type="submit"
-              className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"
-            >
-              Subscribe
-            </button>
-          </form>
-          {submitted && <p className="text-green-600 font-semibold mt-4">✓ Thanks! Check your email.</p>}
-        </div>
-      </div>
+
 
       {/* Pest Categories Grid */}
       <div className="max-w-6xl mx-auto px-4 py-16">
@@ -219,7 +196,7 @@ export default function CommercialProductsPage() {
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-black mb-6">Ready to Upgrade Your Commercial Operations?</h2>
+          <h2 className="text-4xl font-black mb-6">Ready to upgrade your commercial pest control product set?</h2>
           <p className="text-xl mb-8 text-blue-100">Browse our complete selection of professional-grade pest control products and equipment</p>
           <button className="px-10 py-4 bg-white text-blue-600 font-bold text-lg rounded-lg hover:bg-blue-50 transition">
             Browse All Commercial Products
