@@ -8,8 +8,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* SECTION 1: HEADER */}
-      <header className="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#050812] via-[#1e3a8a] to-[#050812] shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link href="/" className="flex-shrink-0">
             <Image 
               src="/logo-header.png" 
@@ -19,20 +19,34 @@ export default function Home() {
               className="h-auto"
             />
           </Link>
-
-          {/* Navigation tabs */}
-          <nav className="flex gap-4">
-            <Link href="/" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">Home</Link>
-            <Link href="/residential" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">Residential</Link>
-            <Link href="/commercial" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">Commercial</Link>
-            <Link href="/professionals" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">Professionals</Link>
-            <Link href="/products" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">Home Products</Link>
-            <Link href="/commercial-products" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">Commercial Products</Link>
-            <Link href="/about" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">About</Link>
-            <Link href="/contact" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition">Contact</Link>
-          </nav>
+          <div className="hidden md:flex items-center gap-3">
+            <Link href="/" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-[#1e3a8a] text-white">
+              Home
+            </Link>
+            <Link href="/residential" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+              Residential
+            </Link>
+            <Link href="/commercial" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+              Commercial
+            </Link>
+            <Link href="/professionals" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+              Professionals
+            </Link>
+            <Link href="/products" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+              Home Products
+            </Link>
+            <Link href="/commercial-products" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+              Commercial Products
+            </Link>
+            <Link href="/about" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+              About
+            </Link>
+            <Link href="/contact" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+              Contact
+            </Link>
+          </div>
         </div>
-      </header>
+      </nav>
 
       {/* SECTION 2: HERO SECTION */}
       <section className="relative bg-gradient-to-br from-[#1e293b] via-[#1e3a8a] to-[#2563eb] text-white py-32">
