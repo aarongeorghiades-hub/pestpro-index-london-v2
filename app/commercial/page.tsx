@@ -122,21 +122,13 @@ export default function CommercialPage() {
 
         if (error) throw error;
 
-        // DEBUG - Log first provider completely
-        console.log('=== FIRST PROVIDER DATA ===');
-        console.log(JSON.stringify(data[0], null, 2));
-
-        // DEBUG - Check specific filter columns
-        console.log('=== FILTER COLUMNS CHECK ===');
-        console.log('property_management:', data[0]?.property_management);
-        console.log('heat_treatment:', data[0]?.heat_treatment);
-        console.log('flexible_contracts:', data[0]?.flexible_contracts);
-
-        // DEBUG - Count how many have each filter
-        const pmCount = data.filter(p => p.property_management === true).length;
-        const htCount = data.filter(p => p.heat_treatment === true).length;
-        console.log('Providers with property_management:', pmCount);
-        console.log('Providers with heat_treatment:', htCount);
+        // DEBUG - Log total providers
+        console.log('Total providers loaded:', data?.length);
+        console.log('First provider sample:', data?.[0]);
+        
+        // DEBUG - Count specific filters
+        console.log('property_management count:', data?.filter(p => p.property_management === true).length);
+        console.log('heat_treatment count:', data?.filter(p => p.heat_treatment === true).length);
 
         setProviders(data || []);
         setFilteredProviders(data || []);
