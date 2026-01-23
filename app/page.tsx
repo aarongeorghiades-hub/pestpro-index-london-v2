@@ -10,12 +10,11 @@ export default function Home() {
       {/* SECTION 1: HEADER */}
       <header className="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] text-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/logo-header.png"
-              alt="PestPro Index Logo"
-              width={180}
+            <Image 
+              src="/logo-header.png" 
+              alt="PestPro Index Logo" 
+              width={180} 
               height={50}
               className="h-auto"
             />

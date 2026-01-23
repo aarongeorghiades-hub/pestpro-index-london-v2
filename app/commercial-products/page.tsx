@@ -35,10 +35,10 @@ export default function CommercialProductsPage() {
       <header className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 border-b border-blue-700 shadow-xl">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/logo-header.png"
-              alt="PestPro Index Logo"
-              width={180}
+            <Image 
+              src="/logo-header.png" 
+              alt="PestPro Index Logo" 
+              width={180} 
               height={50}
               className="h-auto"
             />

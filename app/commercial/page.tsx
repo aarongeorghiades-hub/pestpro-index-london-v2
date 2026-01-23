@@ -259,13 +259,14 @@ export default function CommercialPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative h-[500px] overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="relative h-[500px] w-full overflow-hidden">
+        <div className="absolute inset-0 w-full h-full">
           <Image
             src="/kitchen-cleaning.png"
             alt="Commercial pest control kitchen"
             fill
-            className="object-contain opacity-95"
+            className="object-cover opacity-95"
+            style={{ objectPosition: 'center' }}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/50 via-[#2563eb]/45 to-[#1e3a8a]/50"></div>
@@ -470,7 +471,7 @@ export default function CommercialPage() {
               Pest Control Compliance Tracker
             </h2>
             <p className="text-lg text-gray-600">
-              Digital audit trail for your commercial pest control operations
+              Digital audit trail of pest control removal and prevention for your commercial audit and Health & Safety requirements
             </p>
           </div>
 
@@ -485,7 +486,9 @@ export default function CommercialPage() {
             </div>
             
             <p className="text-gray-700 mb-6 leading-relaxed">
-              Track every pest control activity across your facilities. Document which providers you use, their credentials, work completed, recommendations made, and compliance with regulatory and health & safety requirements.
+              Stay on top of your pest control requirements - with just one click!
+
+Track every pest control activity across your facilities. Document which providers you use, their credentials, recommendations made, work completed, and all compliance with regulatory and health & safety requirements.
             </p>
             
             <div className="space-y-3 mb-8">
