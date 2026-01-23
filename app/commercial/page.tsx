@@ -40,6 +40,7 @@ export default function CommercialPage() {
     { href: '/commercial', label: 'Commercial' },
     { href: '/professionals', label: 'Professionals' },
     { href: '/products', label: 'Home Products' },
+    { href: '/commercial-products', label: 'Commercial Products' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];
@@ -251,19 +252,20 @@ export default function CommercialPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative h-96 bg-gradient-to-br from-blue-600 to-blue-800 overflow-hidden">
-        <Image
-          src="/commercial-hero.jpg"
-          alt="Commercial Pest Control"
-          fill
-          className="object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-blue-800/60"></div>
-        <div className="relative h-full flex items-center justify-center text-center">
-          <div className="max-w-3xl mx-auto px-4">
-            <h1 className="text-5xl font-black text-white mb-4">Commercial Pest Control Solutions</h1>
-            <p className="text-xl text-blue-100">Professional pest management for businesses, facilities, and multi-site operations</p>
-          </div>
+      <section className="relative h-[500px] overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/kitchen-cleaning.png"
+            alt="Commercial pest control kitchen"
+            fill
+            className="object-cover opacity-95"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/50 via-[#2563eb]/45 to-[#1e3a8a]/50"></div>
+        </div>
+        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
+          <h1 className="text-5xl font-black text-white mb-4 drop-shadow-lg">Commercial Pest Control Solutions</h1>
+          <p className="text-xl text-blue-100 drop-shadow-md">Professional pest management for businesses, facilities, and multi-site operations</p>
         </div>
       </section>
 

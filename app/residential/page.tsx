@@ -158,6 +158,7 @@ export default function ResidentialPage() {
     { href: '/commercial', label: 'Commercial' },
     { href: '/professionals', label: 'Professionals' },
     { href: '/products', label: 'Home Products' },
+    { href: '/commercial-products', label: 'Commercial Products' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];
