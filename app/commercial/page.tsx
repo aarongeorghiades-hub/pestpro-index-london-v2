@@ -34,7 +34,7 @@ export default function CommercialPage() {
     { href: '/residential', label: 'Residential' },
     { href: '/commercial', label: 'Commercial' },
     { href: '/professionals', label: 'Professionals' },
-    { href: '/products', label: 'Products' },
+    { href: '/products', label: 'Home Products' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];
@@ -164,7 +164,7 @@ export default function CommercialPage() {
 
     if (filters.size > 0) {
       filtered = data.filter((provider) =>
-        Array.from(filters).some((filter) => provider[filter] === true)
+        Array.from(filters).every((filter) => provider[filter] === true)
       );
     }
 
@@ -226,21 +226,24 @@ export default function CommercialPage() {
 
           {/* NAVIGATION - ALL TABS SAME BORDER */}
           <div className="hidden md:flex items-center gap-3">
-            {navItems.map(item => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`
-                  px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200
-                  ${pathname === item.href
-                    ? 'bg-[#1e3a8a] text-white'
-                    : 'bg-transparent text-white hover:border-white/60 hover:bg-white/10'
-                  }
-                `}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map(item => {
+              const isActive = pathname === item.href || (item.href === '/products' && pathname === '/commercial');
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`
+                    px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200
+                    ${isActive
+                      ? 'bg-[#1e3a8a] text-white'
+                      : 'bg-transparent text-white hover:border-white/60 hover:bg-white/10'
+                    }
+                  `}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </nav>

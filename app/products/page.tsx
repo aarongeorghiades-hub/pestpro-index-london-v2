@@ -50,6 +50,7 @@ export default function ProductsPage() {
             <Link href="/residential" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition text-white">Residential</Link>
             <Link href="/commercial" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition text-white">Commercial</Link>
             <Link href="/professionals" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition text-white">Professionals</Link>
+            <Link href="/products" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition text-white">Home Products</Link>
             <Link href="/about" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition text-white">About</Link>
             <Link href="/contact" className="px-4 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition text-white">Contact</Link>
           </nav>

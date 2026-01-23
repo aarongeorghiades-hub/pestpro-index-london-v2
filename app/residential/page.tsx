@@ -102,13 +102,13 @@ export default function ResidentialPage() {
 
     if (filters.pests.length > 0) {
       filtered = filtered.filter(p => 
-        filters.pests.some(pest => p[pest as keyof Provider] === true)
+        filters.pests.every(pest => p[pest as keyof Provider] === true)
       );
     }
 
     if (filters.services.length > 0) {
       filtered = filtered.filter(p => 
-        filters.services.some(service => p[service as keyof Provider] === true)
+        filters.services.every(service => p[service as keyof Provider] === true)
       );
     }
 
