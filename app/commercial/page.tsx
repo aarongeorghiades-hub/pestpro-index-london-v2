@@ -135,6 +135,21 @@ export default function CommercialPage() {
         console.log('Value:', firstProvider.heat_treatment);
         console.log('Has flexible_contracts?', 'flexible_contracts' in firstProvider);
         console.log('Value:', firstProvider.flexible_contracts);
+        
+        // Count how many providers have TRUE for each filter
+        console.log('=== COUNTING TRUE VALUES ACROSS ALL PROVIDERS ===');
+        const pmTrue = data?.filter(p => p.property_management === true).length;
+        const htTrue = data?.filter(p => p.heat_treatment === true).length;
+        const fcTrue = data?.filter(p => p.flexible_contracts === true).length;
+        const shTrue = data?.filter(p => p.social_housing === true).length;
+        const hospTrue = data?.filter(p => p.hospitality === true).length;
+        
+        console.log('property_management TRUE count:', pmTrue);
+        console.log('heat_treatment TRUE count:', htTrue);
+        console.log('flexible_contracts TRUE count:', fcTrue);
+        console.log('social_housing TRUE count:', shTrue);
+        console.log('hospitality TRUE count:', hospTrue);
+        console.log('Total providers checked:', data?.length);
 
         setProviders(data || []);
         setFilteredProviders(data || []);
