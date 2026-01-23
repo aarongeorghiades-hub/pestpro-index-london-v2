@@ -9,9 +9,14 @@ import { usePathname } from 'next/navigation';
 const supabase = createClient();
 
 interface Provider {
-  provider_id: number;
+  canonical_id: string;
   provider_name: string;
+  name: string;
   website: string | null;
+  phone: string | null;
+  address: string | null;
+  google_rating: number | null;
+  google_review_count: number | null;
   [key: string]: any;
 }
 
@@ -24,7 +29,7 @@ export default function CommercialPage() {
   const [filteredProviders, setFilteredProviders] = useState<Provider[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterCounts, setFilterCounts] = useState<FilterCounts>({});
-  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
+  const [filters, setFilters] = useState({ sectors: [] as string[], methods: [] as string[], contracts: [] as string[], capabilities: [] as string[], credentials: [] as string[], certifications: [] as string[] });
   const [sortBy, setSortBy] = useState('quality');
   const pathname = usePathname();
 
@@ -39,7 +44,7 @@ export default function CommercialPage() {
     { href: '/contact', label: 'Contact' },
   ];
 
-  // Filter categories
+  // Filter categories - 38 commercial filters
   const filterCategories = {
     certifications: [
       { key: 'bpca_member', label: 'BPCA Member' },
@@ -111,13 +116,14 @@ export default function CommercialPage() {
       try {
         const { data, error } = await supabase
           .from('Providers')
-          .select('*');
+          .select('*')
+          .eq('business_commercial', true);
 
         if (error) throw error;
 
         setProviders(data || []);
         calculateFilterCounts(data || []);
-        applyFilters(data || [], new Set());
+        applyFilters(data || [], filters);
       } catch (error) {
         console.error('Error loading providers:', error);
       } finally {
@@ -139,64 +145,60 @@ export default function CommercialPage() {
     setFilterCounts(counts);
   };
 
-  // Calculate quality score
-  const getQualityScore = (provider: Provider): number => {
-    let score = 0;
-    Object.values(filterCategories).forEach((category) => {
-      category.forEach((filter) => {
-        if (provider[filter.key] === true) score++;
-      });
-    });
-    return score;
-  };
-
-  // Get quality badge
-  const getQualityBadge = (score: number) => {
-    if (score >= 40) return { label: 'Elite', color: 'bg-purple-100 text-purple-800' };
-    if (score >= 30) return { label: 'Comprehensive', color: 'bg-blue-100 text-blue-800' };
-    if (score >= 15) return { label: 'Good', color: 'bg-green-100 text-green-800' };
-    return { label: 'Basic', color: 'bg-gray-100 text-gray-800' };
-  };
-
   // Apply filters
-  const applyFilters = (data: Provider[], filters: Set<string>) => {
+  const applyFilters = (data: Provider[], filterState: any) => {
     let filtered = data;
 
-    if (filters.size > 0) {
+    const allSelectedFilters = [
+      ...filterState.sectors,
+      ...filterState.methods,
+      ...filterState.contracts,
+      ...filterState.capabilities,
+      ...filterState.credentials,
+      ...filterState.certifications,
+    ];
+
+    if (allSelectedFilters.length > 0) {
       filtered = data.filter((provider) =>
-        Array.from(filters).every((filter) => provider[filter] === true)
+        allSelectedFilters.every((filter) => provider[filter] === true)
       );
     }
 
     // Sort
     if (sortBy === 'quality') {
-      filtered.sort((a, b) => getQualityScore(b) - getQualityScore(a));
+      filtered.sort((a, b) => {
+        const scoreA = allSelectedFilters.length > 0 ? allSelectedFilters.filter(f => a[f] === true).length : (a.google_rating || 0);
+        const scoreB = allSelectedFilters.length > 0 ? allSelectedFilters.filter(f => b[f] === true).length : (b.google_rating || 0);
+        return scoreB - scoreA;
+      });
     } else if (sortBy === 'name') {
-      filtered.sort((a, b) => a.provider_name.localeCompare(b.provider_name));
+      filtered.sort((a, b) => (a.name || a.provider_name).localeCompare(b.name || b.provider_name));
     }
 
     setFilteredProviders(filtered);
   };
 
   // Handle filter change
-  const handleFilterChange = (filterKey: string) => {
-    const newFilters = new Set(selectedFilters);
-    if (newFilters.has(filterKey)) {
-      newFilters.delete(filterKey);
+  const handleFilterChange = (filterKey: string, category: string) => {
+    const newFilters = { ...filters };
+    const categoryFilters = newFilters[category as keyof typeof filters] as string[];
+    
+    if (categoryFilters.includes(filterKey)) {
+      newFilters[category as keyof typeof filters] = categoryFilters.filter(f => f !== filterKey) as any;
     } else {
-      newFilters.add(filterKey);
+      newFilters[category as keyof typeof filters] = [...categoryFilters, filterKey] as any;
     }
-    setSelectedFilters(newFilters);
+    
+    setFilters(newFilters);
     applyFilters(providers, newFilters);
   };
 
   // Clear all filters
-  const clearAllFilters = () => {
-    setSelectedFilters(new Set());
-    applyFilters(providers, new Set());
+  const clearFilters = () => {
+    const emptyFilters = { sectors: [], methods: [], contracts: [], capabilities: [], credentials: [], certifications: [] };
+    setFilters(emptyFilters);
+    applyFilters(providers, emptyFilters);
   };
-
-
 
   if (loading) {
     return (
@@ -227,7 +229,7 @@ export default function CommercialPage() {
           {/* NAVIGATION - ALL TABS SAME BORDER */}
           <div className="hidden md:flex items-center gap-3">
             {navItems.map(item => {
-              const isActive = pathname === item.href || (item.href === '/products' && pathname === '/commercial');
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.href}
@@ -249,365 +251,218 @@ export default function CommercialPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative h-[500px] overflow-hidden">
-        <div className="absolute inset-0">
-          <Image 
-            src="/kitchen-cleaning.png" 
-            alt="Commercial pest control kitchen" 
-            fill
-            className="object-cover opacity-95"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/50 via-[#2563eb]/45 to-[#1e3a8a]/50"></div>
-        </div>
-        
-        {/* CENTERED HERO CONTENT */}
-        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-          <h1 className="text-7xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] text-white drop-shadow-[0_12px_36px_rgba(0,0,0,0.95)]">
-            Commercial Pest Control
-          </h1>
-          <p className="text-3xl md:text-4xl mb-6 font-extralight tracking-[0.15em] text-white drop-shadow-[0_8px_20px_rgba(0,0,0,0.9)]">
-            457 Verified Providers in London
-          </p>
-          <p className="text-xl text-white font-semibold max-w-3xl leading-relaxed drop-shadow-[0_6px_16px_rgba(0,0,0,0.85)] opacity-95">
-            Find certified commercial pest control providers with advanced filtering by certifications, capabilities, and sectors.
-          </p>
+      <section className="relative h-96 bg-gradient-to-br from-blue-600 to-blue-800 overflow-hidden">
+        <Image
+          src="/commercial-hero.jpg"
+          alt="Commercial Pest Control"
+          fill
+          className="object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-blue-800/60"></div>
+        <div className="relative h-full flex items-center justify-center text-center">
+          <div className="max-w-3xl mx-auto px-4">
+            <h1 className="text-5xl font-black text-white mb-4">Commercial Pest Control Solutions</h1>
+            <p className="text-xl text-blue-100">Professional pest management for businesses, facilities, and multi-site operations</p>
+          </div>
         </div>
       </section>
 
-      {/* SECTION 1: FEATURED PROVIDERS - 4 COLUMNS WITH YELLOW BORDERS */}
+      {/* SECTION 1: FEATURED PROVIDERS - 8 PROVIDERS, YELLOW BORDERS */}
       <section className="relative bg-gradient-to-br from-amber-50 to-white py-16 border-b-2 border-amber-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Title */}
           <div className="text-center mb-12">
-            <h2 className="text-5xl font-black text-gray-900 mb-4">
-              Featured Providers
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Top-rated commercial pest control providers with verified certifications and comprehensive capabilities.
-            </p>
+            <h2 className="text-5xl font-black text-gray-900 mb-4">Featured Commercial Providers</h2>
+            <p className="text-lg text-gray-600">Top-rated commercial pest control providers with verified certifications</p>
           </div>
 
-          {/* 4-COLUMN GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {providers
-              .filter(p => p.bpca_member || p.npta_member)
-              .sort((a, b) => getQualityScore(b) - getQualityScore(a))
+              .filter(p => 
+                p.google_rating && p.google_rating >= 4.8 && 
+                p.google_review_count && p.google_review_count >= 30 &&
+                p.address && (
+                  p.address.toLowerCase().includes('london') ||
+                  p.address.toLowerCase().includes('sw') ||
+                  p.address.toLowerCase().includes('se') ||
+                  p.address.toLowerCase().includes('nw') ||
+                  p.address.toLowerCase().includes('ne') ||
+                  p.address.toLowerCase().includes('ec') ||
+                  p.address.toLowerCase().includes('wc') ||
+                  p.address.toLowerCase().includes('e1') ||
+                  p.address.toLowerCase().includes('w1')
+                )
+              )
               .slice(0, 8)
-              .map(provider => {
-                const score = getQualityScore(provider);
-                const badge = getQualityBadge(score);
-                return (
-                  <div 
-                    key={provider.provider_id} 
-                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border-2 border-amber-400"
-                  >
-                    
-                    {/* Featured Badge */}
-                    <div className="inline-block px-3 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-amber-900 text-xs font-bold rounded-full mb-3 uppercase tracking-wide">
-                      Featured
-                    </div>
-
-                    {/* Company Name */}
-                    <h3 className="font-black text-base text-gray-900 mb-3 leading-tight line-clamp-2">
-                      {provider.provider_name}
-                    </h3>
-
-                    {/* Quality Badge */}
-                    <div className="mb-4">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${badge.color}`}>
-                        {badge.label}
-                      </span>
-                    </div>
-
-                    {/* Certification Badges */}
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {provider.bpca_member && (
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded font-semibold">BPCA</span>
-                      )}
-                      {provider.npta_member && (
-                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-semibold">NPTA</span>
-                      )}
-                      {provider.rsph_level_2 && (
-                        <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded font-semibold">RSPH</span>
-                      )}
-                    </div>
-
-                    {/* Contact Buttons */}
-                    <div className="space-y-2">
-                      {provider.website && (
-                        <a 
-                          href={provider.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-center px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold rounded-lg transition-all shadow-md"
-                        >
-                          Visit Website
-                        </a>
-                      )}
-                    </div>
+              .map(provider => (
+                <div 
+                  key={provider.canonical_id} 
+                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border-2 border-amber-400"
+                >
+                  <div className="inline-block px-3 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-amber-900 text-xs font-bold rounded-full mb-3 uppercase tracking-wide">
+                    Featured
                   </div>
-                );
-              })}
-          </div>
 
+                  <h3 className="font-black text-base text-gray-900 mb-2 leading-tight line-clamp-2">
+                    {provider.name || provider.provider_name}
+                  </h3>
+
+                  {provider.address && (
+                    <div className="flex items-start gap-2 mb-3 text-xs text-gray-600">
+                      <span className="text-red-500 mt-0.5">📍</span>
+                      <span className="line-clamp-2">{provider.address}</span>
+                    </div>
+                  )}
+
+                  {provider.google_rating && provider.google_rating > 0 && (
+                    <div className="flex items-center gap-1 mb-4">
+                      <span className="text-yellow-500">⭐</span>
+                      <span className="text-lg font-bold text-gray-900">
+                        {provider.google_rating.toFixed(1)}
+                      </span>
+                      {provider.google_review_count && provider.google_review_count > 0 && (
+                        <span className="text-xs text-gray-600">
+                          ({provider.google_review_count})
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    {provider.phone && (
+                      <a 
+                        href={`tel:${provider.phone}`}
+                        className="block text-center px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold rounded-lg transition-all shadow-md"
+                      >
+                        📞 {provider.phone}
+                      </a>
+                    )}
+                    {provider.website && (
+                      <a 
+                        href={provider.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-center px-3 py-2 border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 text-sm font-semibold rounded-lg transition-all"
+                      >
+                        Website
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
       </section>
 
-      {/* MOST CERTIFIED PROVIDERS SECTION */}
+      {/* SECTION 2: TOP RATED PROVIDERS */}
       <section className="relative bg-gradient-to-br from-blue-50 to-white py-16 border-b-2 border-blue-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Title */}
           <div className="text-center mb-12">
-            <h2 className="text-5xl font-black text-gray-900 mb-4">
-              Most Certified Providers
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Providers with the highest number of verified certifications and credentials
-            </p>
+            <h2 className="text-5xl font-black text-gray-900 mb-4">Top Rated Commercial Providers</h2>
+            <p className="text-lg text-gray-600">Providers with excellent ratings and proven track records</p>
           </div>
 
-          {/* 4-COLUMN GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {providers
-              .sort((a, b) => getQualityScore(b) - getQualityScore(a))
+              .filter(p =>
+                p.google_rating && p.google_rating >= 4.5 && 
+                p.google_review_count && p.google_review_count >= 30 &&
+                !(p.google_rating >= 4.8 && p.google_review_count >= 30)
+              )
               .slice(0, 8)
-              .map(provider => {
-                const score = getQualityScore(provider);
-                const badge = getQualityBadge(score);
-                return (
-                  <div 
-                    key={provider.provider_id} 
-                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border-2 border-blue-400"
-                  >
-                    
-                    {/* Elite Badge */}
-                    <div className="inline-block px-3 py-1.5 bg-gradient-to-r from-blue-400 to-blue-500 text-blue-900 text-xs font-bold rounded-full mb-3 uppercase tracking-wide">
-                      Top Certified
+              .map(provider => (
+                <div 
+                  key={provider.canonical_id} 
+                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 border-l-4 border-[#1e3a8a]"
+                >
+                  <div className="text-3xl mb-2">🏆</div>
+
+                  <h3 className="font-bold text-base text-gray-900 mb-2 leading-tight line-clamp-2">
+                    {provider.name || provider.provider_name}
+                  </h3>
+
+                  {provider.address && (
+                    <div className="flex items-start gap-1 mb-3 text-xs text-gray-600">
+                      <span className="text-red-500 mt-0.5">📍</span>
+                      <span className="line-clamp-1">{provider.address}</span>
                     </div>
+                  )}
 
-                    {/* Company Name */}
-                    <h3 className="font-black text-base text-gray-900 mb-3 leading-tight line-clamp-2">
-                      {provider.provider_name}
-                    </h3>
-
-                    {/* Certification Count */}
-                    <div className="mb-4 flex items-center gap-2">
-                      <span className="text-3xl">🏅</span>
-                      <div>
-                        <p className="text-2xl font-black text-blue-900">{score}</p>
-                        <p className="text-xs text-gray-600">Certifications</p>
-                      </div>
-                    </div>
-
-                    {/* Quality Badge */}
-                    <div className="mb-4">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${badge.color}`}>
-                        {badge.label}
+                  {provider.google_rating && (
+                    <div className="flex items-center gap-1 mb-4">
+                      <span className="text-yellow-500">⭐</span>
+                      <span className="text-lg font-bold text-gray-900">
+                        {provider.google_rating.toFixed(1)}
+                      </span>
+                      <span className="text-xs text-gray-600">
+                        ({provider.google_review_count})
                       </span>
                     </div>
+                  )}
 
-                    {/* Contact Buttons */}
-                    <div className="space-y-2">
-                      {provider.website && (
-                        <a 
-                          href={provider.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-center px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-bold rounded-lg transition-all shadow-md"
-                        >
-                          Visit Website
-                        </a>
-                      )}
-                    </div>
+                  <div className="space-y-2">
+                    {provider.phone && (
+                      <a 
+                        href={`tel:${provider.phone}`}
+                        className="block text-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors"
+                      >
+                        📞 Call
+                      </a>
+                    )}
+                    {provider.website && (
+                      <a 
+                        href={provider.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-center px-3 py-2 border border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 text-sm font-semibold rounded-lg transition-colors"
+                      >
+                        Website
+                      </a>
+                    )}
                   </div>
-                );
-              })}
-          </div>
-
-        </div>
-      </section>
-
-      {/* PDF GUIDES SECTION - TWO GUIDES SIDE-BY-SIDE */}
-      <section className="relative bg-gradient-to-br from-gray-50 to-white py-16 border-b-2 border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Title */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">
-              Essential Guides for Commercial Pest Control
-            </h2>
-            <p className="text-lg text-gray-600">
-              Expert resources to help you select the right provider and maintain compliance
-            </p>
-          </div>
-
-          {/* Two Guides Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            {/* LEFT GUIDE */}
-            <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-[#1e3a8a]">
-              <div className="mb-6">
-                <h3 className="text-2xl font-black text-gray-900 mb-2">
-                  Commercial Provider Selection Guide
-                </h3>
-                <p className="text-sm font-semibold text-[#2563eb] mb-3">For Property Managers</p>
-                <p className="text-3xl font-black text-[#f59e0b] mb-4">£14.99</p>
-              </div>
-              
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                Step-by-step guide to selecting the right commercial pest control provider for multi-unit properties and commercial portfolios.
-              </p>
-              
-              <div className="space-y-3 mb-8">
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-lg mt-0.5">•</span>
-                  <p className="text-gray-700">Certification requirements to look for</p>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-lg mt-0.5">•</span>
-                  <p className="text-gray-700">Contract evaluation frameworks</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-lg mt-0.5">•</span>
-                  <p className="text-gray-700">RFP templates and checklists</p>
-                </div>
-              </div>
-              
-              <Link 
-                href="https://pestproindex.lemonsqueezy.com/checkout/buy/8d8b4f4a-a913-48b3-bf8d-dfcaf6fcb5d6"
-                className="block text-center px-6 py-3 bg-[#1e3a8a] text-white font-bold rounded-lg hover:bg-blue-900 transition-all shadow-md"
-              >
-                Get the Guide - £14.99
-              </Link>
-            </div>
-
-            {/* RIGHT GUIDE */}
-            <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-[#f59e0b]">
-              <div className="mb-6">
-                <h3 className="text-2xl font-black text-gray-900 mb-2">
-                  Compliance Workbook
-                </h3>
-                <p className="text-sm font-semibold text-[#2563eb] mb-3">For Small Business Owners</p>
-                <p className="text-3xl font-black text-[#f59e0b] mb-4">£29.99</p>
-              </div>
-              
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                Essential compliance requirements for commercial pest control in London.
-              </p>
-              
-              <div className="space-y-3 mb-8">
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-lg mt-0.5">•</span>
-                  <p className="text-gray-700">Regulatory compliance checklist</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-lg mt-0.5">•</span>
-                  <p className="text-gray-700">Documentation templates</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-blue-600 text-lg mt-0.5">•</span>
-                  <p className="text-gray-700">Audit preparation guide</p>
-                </div>
-              </div>
-              
-              <Link 
-                href="https://pestproindex.lemonsqueezy.com/checkout/buy/8d8b4f4a-a913-48b3-bf8d-dfcaf6fcb5d6"
-                className="block text-center px-6 py-3 bg-[#1e3a8a] text-white font-bold rounded-lg hover:bg-blue-900 transition-all shadow-md"
-              >
-                Get the Workbook - £29.99
-              </Link>
-            </div>
-
+              ))}
           </div>
         </div>
       </section>
 
-      {/* SECTION 2: TOP-RATED PROVIDERS */}
-      <section className="relative bg-gradient-to-br from-white to-gray-50 py-16 border-b-2 border-gray-200">
+      {/* PDF GUIDES SECTION */}
+      <section className="relative bg-white py-16 border-b-2 border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Title */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">
-              Most Certified Providers
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Providers with comprehensive certifications across multiple categories
-            </p>
+            <h2 className="text-4xl font-black text-gray-900 mb-4">Commercial Pest Control Guides</h2>
           </div>
 
-          {/* Top 8 High-Quality Cards (4 columns) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {providers
-              .filter(p => getQualityScore(p) >= 30)
-              .sort((a, b) => getQualityScore(b) - getQualityScore(a))
-              .slice(0, 8)
-              .map(provider => {
-                const score = getQualityScore(provider);
-                const badge = getQualityBadge(score);
-                return (
-                  <div 
-                    key={provider.provider_id} 
-                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 border-l-4 border-[#1e3a8a]"
-                  >
-                    
-                    {/* Company Name */}
-                    <h3 className="font-bold text-base text-gray-900 mb-2 leading-tight line-clamp-2">
-                      {provider.provider_name}
-                    </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 border-l-4 border-blue-600 hover:shadow-lg transition">
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Commercial Pest Control Guide</h3>
+              <p className="text-gray-700 mb-6">Comprehensive guide to commercial pest control services, including best practices for facility management and compliance requirements.</p>
+              <a href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">
+                Get the Guide - £14.99
+              </a>
+            </div>
 
-                    {/* Quality Badge */}
-                    <div className="mb-4">
-                      <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${badge.color}`}>
-                        {badge.label}
-                      </span>
-                    </div>
-
-                    {/* Quality Score */}
-                    <p className="text-sm text-gray-600 mb-4">
-                      Quality Score: <span className="font-bold">{score}/48</span>
-                    </p>
-
-                    {/* Contact */}
-                    <div className="space-y-2">
-                      {provider.website && (
-                        <a 
-                          href={provider.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors"
-                        >
-                          Visit Website
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-8 border-l-4 border-amber-600 hover:shadow-lg transition">
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Multi-Site Pest Management Workbook</h3>
+              <p className="text-gray-700 mb-6">Practical workbook for managing pest control across multiple locations with templates, checklists, and compliance frameworks.</p>
+              <a href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-lg transition">
+                Get the Workbook - £23.99
+              </a>
+            </div>
           </div>
-
         </div>
       </section>
 
-      {/* SECTION 3: FULL PROVIDER LIST */}
+      {/* SECTION 3: FULL PROVIDER LIST WITH FILTERS */}
       <section className="relative bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Title */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">
-              Full List of Commercial Providers
-            </h2>
+            <h2 className="text-4xl font-black text-gray-900 mb-4">Full List of Commercial Providers</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              All 245 commercial providers with advanced filtering
+              All {providers.length} commercial providers with advanced filtering
             </p>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
-            
             {/* FILTER SIDEBAR */}
             <aside className="w-full lg:w-80 lg:flex-shrink-0">
               <div className="bg-white rounded-2xl shadow-lg p-6 lg:sticky lg:top-24 border border-gray-100 max-h-[calc(100vh-7rem)] overflow-y-auto">
@@ -615,9 +470,9 @@ export default function CommercialPage() {
                 {/* Filter Header */}
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-gray-900">Filters</h3>
-                  {selectedFilters.size > 0 && (
+                  {(filters.sectors.length > 0 || filters.methods.length > 0 || filters.contracts.length > 0 || filters.capabilities.length > 0 || filters.credentials.length > 0 || filters.certifications.length > 0) && (
                     <button
-                      onClick={clearAllFilters}
+                      onClick={clearFilters}
                       className="text-sm text-blue-600 hover:text-blue-800 font-medium"
                     >
                       Clear All
@@ -625,145 +480,121 @@ export default function CommercialPage() {
                   )}
                 </div>
 
-                {/* Results Count */}
-                <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                  <p className="text-2xl font-black text-blue-900">{filteredProviders.length}</p>
-                  <p className="text-sm text-blue-700">Providers Found</p>
+                {/* Provider Count */}
+                <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                  <div className="text-3xl font-black text-blue-600">{filteredProviders.length}</div>
+                  <div className="text-sm text-blue-700">Providers Found</div>
                 </div>
 
                 {/* Certifications */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                    Certifications
-                  </h4>
+                <div className="mb-6">
+                  <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">Certifications</h4>
                   <div className="space-y-2">
                     {filterCategories.certifications.map(filter => (
-                      <label key={filter.key} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                      <label key={filter.key} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={selectedFilters.has(filter.key)}
-                          onChange={() => handleFilterChange(filter.key)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          checked={filters.certifications.includes(filter.key)}
+                          onChange={() => handleFilterChange(filter.key, 'certifications')}
+                          className="w-4 h-4 rounded border-gray-300"
                         />
-                        <span className="text-sm text-gray-700 flex-1">{filter.label}</span>
-                        <span className="text-xs text-gray-500 font-medium">
-                          ({filterCounts[filter.key] || 0})
-                        </span>
+                        <span className="text-sm text-gray-700">{filter.label}</span>
+                        <span className="text-xs text-gray-500">({filterCounts[filter.key] || 0})</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Methods */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                    Methods
-                  </h4>
+                <div className="mb-6">
+                  <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">Specialist Methods</h4>
                   <div className="space-y-2">
                     {filterCategories.methods.map(filter => (
-                      <label key={filter.key} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                      <label key={filter.key} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={selectedFilters.has(filter.key)}
-                          onChange={() => handleFilterChange(filter.key)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          checked={filters.methods.includes(filter.key)}
+                          onChange={() => handleFilterChange(filter.key, 'methods')}
+                          className="w-4 h-4 rounded border-gray-300"
                         />
-                        <span className="text-sm text-gray-700 flex-1">{filter.label}</span>
-                        <span className="text-xs text-gray-500 font-medium">
-                          ({filterCounts[filter.key] || 0})
-                        </span>
+                        <span className="text-sm text-gray-700">{filter.label}</span>
+                        <span className="text-xs text-gray-500">({filterCounts[filter.key] || 0})</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Contracts */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                    Contracts
-                  </h4>
+                <div className="mb-6">
+                  <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">Contract Options</h4>
                   <div className="space-y-2">
                     {filterCategories.contracts.map(filter => (
-                      <label key={filter.key} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                      <label key={filter.key} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={selectedFilters.has(filter.key)}
-                          onChange={() => handleFilterChange(filter.key)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          checked={filters.contracts.includes(filter.key)}
+                          onChange={() => handleFilterChange(filter.key, 'contracts')}
+                          className="w-4 h-4 rounded border-gray-300"
                         />
-                        <span className="text-sm text-gray-700 flex-1">{filter.label}</span>
-                        <span className="text-xs text-gray-500 font-medium">
-                          ({filterCounts[filter.key] || 0})
-                        </span>
+                        <span className="text-sm text-gray-700">{filter.label}</span>
+                        <span className="text-xs text-gray-500">({filterCounts[filter.key] || 0})</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Sectors */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                    Sectors
-                  </h4>
+                <div className="mb-6">
+                  <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">Commercial Sectors</h4>
                   <div className="space-y-2">
                     {filterCategories.sectors.map(filter => (
-                      <label key={filter.key} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                      <label key={filter.key} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={selectedFilters.has(filter.key)}
-                          onChange={() => handleFilterChange(filter.key)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          checked={filters.sectors.includes(filter.key)}
+                          onChange={() => handleFilterChange(filter.key, 'sectors')}
+                          className="w-4 h-4 rounded border-gray-300"
                         />
-                        <span className="text-sm text-gray-700 flex-1">{filter.label}</span>
-                        <span className="text-xs text-gray-500 font-medium">
-                          ({filterCounts[filter.key] || 0})
-                        </span>
+                        <span className="text-sm text-gray-700">{filter.label}</span>
+                        <span className="text-xs text-gray-500">({filterCounts[filter.key] || 0})</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Capabilities */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                    Capabilities
-                  </h4>
+                <div className="mb-6">
+                  <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">Service Capabilities</h4>
                   <div className="space-y-2">
                     {filterCategories.capabilities.map(filter => (
-                      <label key={filter.key} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                      <label key={filter.key} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={selectedFilters.has(filter.key)}
-                          onChange={() => handleFilterChange(filter.key)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          checked={filters.capabilities.includes(filter.key)}
+                          onChange={() => handleFilterChange(filter.key, 'capabilities')}
+                          className="w-4 h-4 rounded border-gray-300"
                         />
-                        <span className="text-sm text-gray-700 flex-1">{filter.label}</span>
-                        <span className="text-xs text-gray-500 font-medium">
-                          ({filterCounts[filter.key] || 0})
-                        </span>
+                        <span className="text-sm text-gray-700">{filter.label}</span>
+                        <span className="text-xs text-gray-500">({filterCounts[filter.key] || 0})</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Credentials */}
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                    Credentials
-                  </h4>
+                <div className="mb-6">
+                  <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">Credentials & Recognition</h4>
                   <div className="space-y-2">
                     {filterCategories.credentials.map(filter => (
-                      <label key={filter.key} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                      <label key={filter.key} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={selectedFilters.has(filter.key)}
-                          onChange={() => handleFilterChange(filter.key)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          checked={filters.credentials.includes(filter.key)}
+                          onChange={() => handleFilterChange(filter.key, 'credentials')}
+                          className="w-4 h-4 rounded border-gray-300"
                         />
-                        <span className="text-sm text-gray-700 flex-1">{filter.label}</span>
-                        <span className="text-xs text-gray-500 font-medium">
-                          ({filterCounts[filter.key] || 0})
-                        </span>
+                        <span className="text-sm text-gray-700">{filter.label}</span>
+                        <span className="text-xs text-gray-500">({filterCounts[filter.key] || 0})</span>
                       </label>
                     ))}
                   </div>
@@ -773,32 +604,17 @@ export default function CommercialPage() {
 
             {/* MAIN CONTENT */}
             <main className="flex-1">
-              {loading ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-600">Loading providers...</p>
-                </div>
-              ) : filteredProviders.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 text-lg mb-4">No providers match your filters</p>
-                  <button
-                    onClick={clearAllFilters}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    Clear all filters
-                  </button>
-                </div>
-              ) : (
+              {filteredProviders.length > 0 ? (
                 <>
-                  {/* Sort and Results Info */}
-                  <div className="flex justify-between items-center mb-8">
+                  <div className="flex justify-between items-center mb-6">
                     <p className="text-gray-600 font-medium">
-                      Showing {filteredProviders.length} providers
+                      Showing {filteredProviders.length} of {providers.length} providers
                     </p>
                     <select
                       value={sortBy}
                       onChange={(e) => {
                         setSortBy(e.target.value);
-                        applyFilters(providers, selectedFilters);
+                        applyFilters(providers, filters);
                       }}
                       className="px-4 py-2 border-2 border-gray-300 rounded-lg font-medium text-gray-900"
                     >
@@ -808,33 +624,40 @@ export default function CommercialPage() {
                   </div>
 
                   {/* Provider Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProviders.map(provider => {
-                      const score = getQualityScore(provider);
-                      const badge = getQualityBadge(score);
-                      const isTrophy = score >= 30;
+                      const isTrophy = provider.google_rating && provider.google_rating >= 4.5 && 
+                                      provider.google_review_count && provider.google_review_count >= 30;
                       const borderClass = isTrophy ? 'border-l-4 border-amber-500' : 'border-l-4 border-[#1e3a8a]';
 
                       return (
-                        <div key={provider.provider_id} className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 ${borderClass}`}>
-                          <h3 className="font-bold text-base text-gray-900 mb-3 leading-tight line-clamp-2">
-                            {provider.provider_name}
+                        <div key={provider.canonical_id} className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 ${borderClass}`}>
+                          {isTrophy && <div className="text-2xl mb-2">🏆</div>}
+                          <h3 className="font-bold text-base text-gray-900 mb-2 leading-tight line-clamp-2">
+                            {provider.name || provider.provider_name}
                           </h3>
-                          <div className="mb-3">
-                            <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${badge.color}`}>
-                              {badge.label}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 mb-4">
-                            {isTrophy && <span className="text-2xl">⭐</span>}
-                            <p className="text-sm text-gray-600 font-semibold">
-                              {score} Certification{score !== 1 ? 's' : ''}
-                            </p>
-                          </div>
+                          {provider.address && (
+                            <div className="flex items-start gap-1 mb-2 text-xs text-gray-600">
+                              <span className="text-red-500">📍</span>
+                              <span className="line-clamp-1">{provider.address}</span>
+                            </div>
+                          )}
+                          {provider.google_rating && (
+                            <div className="flex items-center gap-1 mb-3">
+                              <span className="text-yellow-500">⭐</span>
+                              <span className="text-sm font-bold text-gray-900">{provider.google_rating.toFixed(1)}</span>
+                              <span className="text-xs text-gray-600">({provider.google_review_count})</span>
+                            </div>
+                          )}
                           <div className="space-y-2">
+                            {provider.phone && (
+                              <a href={`tel:${provider.phone}`} className="block text-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg">
+                                📞 {provider.phone}
+                              </a>
+                            )}
                             {provider.website && (
-                              <a href={provider.website} target="_blank" rel="noopener noreferrer" className="block text-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors">
-                                Visit Website
+                              <a href={provider.website} target="_blank" rel="noopener noreferrer" className="block text-center px-3 py-2 border border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 text-sm font-semibold rounded-lg">
+                                Website
                               </a>
                             )}
                           </div>
@@ -843,110 +666,21 @@ export default function CommercialPage() {
                     })}
                   </div>
                 </>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 text-lg">No providers match your selected filters.</p>
+                  <button
+                    onClick={clearFilters}
+                    className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
               )}
             </main>
-
           </div>
         </div>
       </section>
-
-      {/* PRODUCTS SECTION - 3 COLUMNS */}
-      <section className="relative bg-gradient-to-br from-gray-50 to-white py-16 border-b-2 border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">
-              Commercial Products
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Professional-grade pest control products for commercial use
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Product 1 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-amber-400 hover:shadow-xl transition">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Professional Equipment</h3>
-              <p className="text-gray-600 mb-6">Professional-grade equipment including sprayers, traps, proofing materials, and treatment solutions for large-scale pest control operations.</p>
-              <Link href="/residential" className="inline-flex items-center gap-2 text-[#1e3a8a] hover:text-blue-900 font-semibold">
-                View Products <span>→</span>
-              </Link>
-            </div>
-
-            {/* Product 2 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-amber-400 hover:shadow-xl transition">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Monitoring Systems</h3>
-              <p className="text-gray-600 mb-6">Advanced monitoring and detection systems for comprehensive pest management in commercial facilities and multi-site operations.</p>
-              <Link href="/residential" className="inline-flex items-center gap-2 text-[#1e3a8a] hover:text-blue-900 font-semibold">
-                View Products <span>→</span>
-              </Link>
-            </div>
-
-            {/* Product 3 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-amber-400 hover:shadow-xl transition">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Compliance & Documentation</h3>
-              <p className="text-gray-600 mb-6">Documentation, reporting, and compliance tools to meet regulatory requirements and maintain records for commercial pest control operations.</p>
-              <Link href="/residential" className="inline-flex items-center gap-2 text-[#1e3a8a] hover:text-blue-900 font-semibold">
-                View Products <span>→</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS SECTION */}
-      <section className="relative bg-white py-16 border-b-2 border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">How It Works</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">Our methodology for finding the right commercial provider</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Step 1 */}
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-lg p-8 border-t-4 border-[#1e3a8a]">
-              <div className="text-5xl font-black text-[#1e3a8a] mb-4">1</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Independent Research</h3>
-              <p className="text-gray-600">We independently verify provider certifications, capabilities, and credentials from official sources. No provider pays for inclusion.</p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-lg p-8 border-t-4 border-[#1e3a8a]">
-              <div className="text-5xl font-black text-[#1e3a8a] mb-4">2</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Transparent Data</h3>
-              <p className="text-gray-600">All provider information is displayed transparently. You see exactly what certifications, sectors, and capabilities each provider has.</p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-lg p-8 border-t-4 border-[#1e3a8a]">
-              <div className="text-5xl font-black text-[#1e3a8a] mb-4">3</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Your Decision</h3>
-              <p className="text-gray-600">You decide which provider is right for your business. Filter by your specific needs and contact providers directly.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* PRODUCTS PAGE LINK - BOTTOM */}
-      <section className="relative bg-gray-50 py-12 border-t-2 border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            Looking for Product Recommendations?
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Visit our Products page to see the most popular pest control products available today, organized by pest type. Includes user ratings and direct purchase links.
-          </p>
-          <Link 
-            href="/products"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold text-lg"
-          >
-            View Products Page
-            <span>→</span>
-          </Link>
-        </div>
-      </section>
-
     </div>
   );
 }
