@@ -138,11 +138,18 @@ export default function CommercialPage() {
   // Calculate filter counts
   const calculateFilterCounts = (data: Provider[]) => {
     const counts: FilterCounts = {};
+    if (data.length > 0) {
+      console.log('First provider data:', data[0]);
+      console.log('Filter categories:', filterCategories);
+    }
     Object.values(filterCategories).forEach((category) => {
       category.forEach((filter) => {
-        counts[filter.key] = data.filter((p) => p[filter.key] === true).length;
+        const count = data.filter((p) => p[filter.key] === true).length;
+        counts[filter.key] = count;
+        if (count > 0) console.log(`${filter.key}: ${count}`);
       });
     });
+    console.log('Final filter counts:', counts);
     setFilterCounts(counts);
   };
 
