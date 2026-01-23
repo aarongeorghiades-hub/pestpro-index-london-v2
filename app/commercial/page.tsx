@@ -118,11 +118,28 @@ export default function CommercialPage() {
         const { data, error } = await supabase
           .from('Providers')
           .select('*')
-          .eq('business_commercial', true);
+          .limit(500);
 
         if (error) throw error;
 
+        // DEBUG - Log first provider completely
+        console.log('=== FIRST PROVIDER DATA ===');
+        console.log(JSON.stringify(data[0], null, 2));
+
+        // DEBUG - Check specific filter columns
+        console.log('=== FILTER COLUMNS CHECK ===');
+        console.log('property_management:', data[0]?.property_management);
+        console.log('heat_treatment:', data[0]?.heat_treatment);
+        console.log('flexible_contracts:', data[0]?.flexible_contracts);
+
+        // DEBUG - Count how many have each filter
+        const pmCount = data.filter(p => p.property_management === true).length;
+        const htCount = data.filter(p => p.heat_treatment === true).length;
+        console.log('Providers with property_management:', pmCount);
+        console.log('Providers with heat_treatment:', htCount);
+
         setProviders(data || []);
+        setFilteredProviders(data || []);
         calculateFilterCounts(data || []);
         applyFilters(data || [], filters);
       } catch (error) {
