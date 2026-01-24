@@ -4,6 +4,25 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// Amazon Associates Configuration
+const AMAZON_TRACKING_ID = 'pestproindex-21'; // Active Amazon Associates Store ID
+
+/**
+ * AMAZON ASSOCIATES VERIFICATION
+ * Status: Active since January 24, 2026
+ * Store ID: pestproindex-21
+ * 
+ * Test link format: https://www.amazon.co.uk/dp/B00TU1VL08?tag=pestproindex-21
+ * All 38 product links generate with this tracking parameter
+ * 
+ * Revenue tracking: Monitor via Amazon Associates dashboard
+ */
+
+// Helper function to generate Amazon affiliate links
+const getAmazonLink = (asin: string): string => {
+  return `https://www.amazon.co.uk/dp/${asin}?tag=${AMAZON_TRACKING_ID}`;
+};
+
 export default function ProductsPage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
