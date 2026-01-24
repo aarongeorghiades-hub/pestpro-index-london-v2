@@ -184,7 +184,7 @@ export default function CommercialProductsPage() {
               <p className="text-gray-700 mb-4">Complete commercial-grade rodent management system with traps, baits, and monitoring equipment</p>
               <div className="flex items-center justify-between">
                 <span className="text-3xl font-black text-blue-600">£89.99</span>
-                <a href={getAmazonLink("B00TU1VL08")} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+                <a href="https://www.amazon.co.uk/dp/B00TU1VL08?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
                   View on Amazon
                 </a>
               </div>
@@ -195,7 +195,7 @@ export default function CommercialProductsPage() {
               <p className="text-gray-700 mb-4">Heavy-duty spraying equipment for large facilities and multi-site operations</p>
               <div className="flex items-center justify-between">
                 <span className="text-3xl font-black text-blue-600">£149.99</span>
-                <a href={getAmazonLink("B07Y5KXQKK")} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+                <a href="https://www.amazon.co.uk/dp/B07Y5KXQKK?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
                   View on Amazon
                 </a>
               </div>
@@ -206,7 +206,7 @@ export default function CommercialProductsPage() {
               <p className="text-gray-700 mb-4">Commercial-strength bed bug detection and treatment solution for hotels and hospitality</p>
               <div className="flex items-center justify-between">
                 <span className="text-3xl font-black text-blue-600">£199.99</span>
-                <a href={getAmazonLink("B08QBVVQY8")} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+                <a href="https://www.amazon.co.uk/dp/B08QBVVQY8?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
                   View on Amazon
                 </a>
               </div>
@@ -217,7 +217,7 @@ export default function CommercialProductsPage() {
               <p className="text-gray-700 mb-4">Complete bird deterrent and proofing solution for commercial buildings and facilities</p>
               <div className="flex items-center justify-between">
                 <span className="text-3xl font-black text-blue-600">£249.99</span>
-                <a href={getAmazonLink("B07YFVVVV7")} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+                <a href="https://www.amazon.co.uk/dp/B07YFVVVV7?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
                   View on Amazon
                 </a>
               </div>
