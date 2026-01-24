@@ -46,7 +46,20 @@ const categoryEmojis: Record<string, string> = {
   'silverfish': '🪲',
   'fleas': '🦟',
   'wasps': '🐝',
-  'dehumidifier': '💧'
+  'dehumidifier': '🪲'  // Booklice / Psocids
+};
+
+const categoryLabels: Record<string, string> = {
+  'mice': 'Mice',
+  'rats': 'Rats',
+  'ants': 'Ants',
+  'cockroaches': 'Cockroaches',
+  'bed_bugs': 'Bed Bugs',
+  'moths': 'Moths',
+  'silverfish': 'Silverfish',
+  'fleas': 'Fleas',
+  'wasps': 'Wasps',
+  'dehumidifier': 'Booklice / Psocids'  // Updated category name
 };
 
 export default function ProductsPage() {
@@ -243,7 +256,7 @@ export default function ProductsPage() {
               className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 hover:shadow-2xl hover:border-blue-500 transition-all duration-300 p-8 text-center group cursor-pointer"
             >
               <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">{categoryEmojis[category] || '🐛'}</div>
-              <h3 className="font-bold text-xl text-gray-900 mb-2 capitalize">{category.replace('_', ' ')}</h3>
+              <h3 className="font-bold text-xl text-gray-900 mb-2">{categoryLabels[category] || category.replace('_', ' ')}</h3>
               <p className="text-sm text-gray-600">{groupedProducts[category]?.length || 0} products</p>
             </a>
           ))}
@@ -263,8 +276,8 @@ export default function ProductsPage() {
         ) : (
           categories.map((category) => (
             <section key={category} id={category} className="mb-16 scroll-mt-20">
-              <h3 className="text-3xl font-black text-gray-900 mb-8 capitalize">
-                {category.replace('_', ' ')}
+              <h3 className="text-3xl font-black text-gray-900 mb-8">
+                {categoryLabels[category] || category.replace('_', ' ')}
               </h3>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
