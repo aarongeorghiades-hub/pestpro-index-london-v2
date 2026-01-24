@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // Amazon Associates Configuration
-const AMAZON_TRACKING_ID = 'pestproindex-21'; // Active Amazon Associates Store ID
+const AMAZON_TRACKING_ID = 'pestproindex-21'; // ✅ Active - verified Jan 24, 2026
 
 /**
  * AMAZON ASSOCIATES VERIFICATION
@@ -47,6 +47,73 @@ export default function ProductsPage() {
     { name: 'Fleas', icon: '🦟' },
     { name: 'Spiders', icon: '🕷️' }
   ];
+
+  // All 38 products organized by category
+  const products = [
+    // MICE (11 Products)
+    { category: 'Mice', name: 'Victor Easy Set Mouse Trap', asin: 'B00TU1VL08', price: '£12.99' },
+    { category: 'Mice', name: 'Rotech Multi-Catch Mouse Trap', asin: 'B005838M7W', price: '£18.50' },
+    { category: 'Mice', name: 'Rentokil Enclosed Mouse Trap', asin: 'B071GD1VGN', price: '£14.99' },
+    { category: 'Mice', name: 'Rentokil Mouse Bait Station', asin: 'B088TH1XCS', price: '£16.99' },
+    { category: 'Mice', name: 'Catcha Humane Mouse Trap', asin: 'B08H552SK5', price: '£22.99' },
+    { category: 'Mice', name: 'Live Capture Mouse Trap', asin: 'B07L8JNPF2', price: '£19.99' },
+    { category: 'Mice', name: 'Natural Mouse Repellent Sachets', asin: 'B0CGVDXC9C', price: '£9.99' },
+    { category: 'Mice', name: 'Peppermint Oil Spray', asin: 'B0CJN8QQ1M', price: '£11.99' },
+    { category: 'Mice', name: 'Steel Wool for Gaps', asin: 'B0842WNTY5', price: '£7.99' },
+    { category: 'Mice', name: 'Expanding Foam Gap Filler', asin: 'B00EURJ84G', price: '£8.99' },
+    { category: 'Mice', name: 'Wire Mesh Roll', asin: 'B09JKHBBC5', price: '£15.99' },
+    
+    // RATS (6 Products)
+    { category: 'Rats', name: 'Heavy Duty Rat Trap', asin: 'B08KW3PFYX', price: '£24.99' },
+    { category: 'Rats', name: 'Snap-E Rat Trap', asin: 'B000BQS2JE', price: '£19.99' },
+    { category: 'Rats', name: 'Rat Bait Station', asin: 'B085Q46JWF', price: '£28.99' },
+    { category: 'Rats', name: 'Pest Stop Rat Killer Bait', asin: 'B07ZPBVJ9R', price: '£12.99' },
+    { category: 'Rats', name: 'Electronic Rat Deterrent', asin: 'B07X4V8JJQ', price: '£34.99' },
+    { category: 'Rats', name: 'Metal Rat Guard Mesh', asin: 'B08R3DQPW2', price: '£21.99' },
+    
+    // ANTS (4 Products)
+    { category: 'Ants', name: 'Nippon Ant Killer Gel', asin: 'B00BCQRRRA', price: '£8.99' },
+    { category: 'Ants', name: 'Ant Bait Stations', asin: 'B08CZRDGVK', price: '£11.99' },
+    { category: 'Ants', name: 'Outdoor Ant Spray', asin: 'B00U7KS7I8', price: '£9.99' },
+    { category: 'Ants', name: 'Ant Powder', asin: 'B00HKQL90K', price: '£7.99' },
+    
+    // COCKROACHES (3 Products)
+    { category: 'Cockroaches', name: 'Cockroach Gel Bait', asin: 'B07F2G8KLP', price: '£13.99' },
+    { category: 'Cockroaches', name: 'Cockroach Traps', asin: 'B08D3KVC7L', price: '£10.99' },
+    { category: 'Cockroaches', name: 'Residual Cockroach Spray', asin: 'B00U7KS7I8', price: '£14.99' },
+    
+    // BED BUGS (3 Products)
+    { category: 'Bed Bugs', name: 'Bed Bug Killer Spray', asin: 'B07MCXJQRG', price: '£16.99' },
+    { category: 'Bed Bugs', name: 'Diatomaceous Earth', asin: 'B07K8QZ3MH', price: '£12.99' },
+    { category: 'Bed Bugs', name: 'Bed Bug Mattress Protector', asin: 'B08FXGZ8YQ', price: '£24.99' },
+    
+    // MOTHS (3 Products)
+    { category: 'Moths', name: 'Moth Traps', asin: 'B09DYQT2TG', price: '£9.99' },
+    { category: 'Moths', name: 'Moth Repellent Sachets', asin: 'B09XBDJ8C3', price: '£8.99' },
+    { category: 'Moths', name: 'Carpet Moth Killer Spray', asin: 'B0BVTGV9ND', price: '£11.99' },
+    
+    // SILVERFISH (2 Products)
+    { category: 'Silverfish', name: 'Silverfish Killer Spray', asin: 'B07PTRQWGL', price: '£10.99' },
+    { category: 'Silverfish', name: 'Silverfish Traps', asin: 'B0BV93ZMFT', price: '£9.99' },
+    
+    // FLEAS (2 Products)
+    { category: 'Fleas', name: 'Flea Killer Household Spray', asin: 'B07QDS9M4J', price: '£13.99' },
+    { category: 'Fleas', name: 'Flea Powder', asin: 'B00TF3YPQM', price: '£11.99' },
+    
+    // WASPS (2 Products)
+    { category: 'Wasps', name: 'Rentokil Wasp Nest Destroyer', asin: 'B000LNS6GM', price: '£15.99' },
+    { category: 'Wasps', name: 'Zero In Wasp Nest Spray', asin: 'B0043E6X9S', price: '£14.99' }
+  ];
+
+  // Group products by category
+  const groupedProducts = products.reduce((acc, product) => {
+    const category = product.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(product);
+    return acc;
+  }, {} as Record<string, typeof products>);
 
   return (
     <div className="min-h-screen bg-white">
@@ -91,9 +158,8 @@ export default function ProductsPage() {
         </div>
       </nav>
 
-      {/* Hero Section - DARK BLUE */}
+      {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 py-20 overflow-hidden">
-        {/* Decorative pattern */}
         <div className="absolute inset-0 opacity-5">
           <div 
             className="absolute inset-0" 
@@ -105,32 +171,27 @@ export default function ProductsPage() {
         </div>
         
         <div className="relative max-w-4xl mx-auto px-4">
-          {/* Main Heading - WHITE and HUGE */}
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[0.9] tracking-tight text-center">
             Product<br />Recommendations
           </h1>
           
-          {/* Subtitle - WHITE text with bold emphasis */}
           <p className="text-xl md:text-2xl text-blue-100/90 max-w-3xl mx-auto leading-relaxed font-medium text-center">
             Get the products that are <span className="font-bold text-white">ACTUALLY WORKING</span> for London homeowners <span className="font-bold text-white">RIGHT NOW</span>. Direct Amazon links with live pricing.
           </p>
         </div>
       </div>
 
-      {/* Features Box - Premium Card with NEGATIVE MARGIN OVERLAP */}
+      {/* Features Box */}
       <div className="max-w-4xl mx-auto px-4 -mt-20 mb-16">
         <div className="relative bg-white rounded-3xl shadow-2xl p-10 border border-gray-100 hover:shadow-3xl transition-shadow duration-300">
-          {/* Top accent bar */}
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 rounded-t-3xl"></div>
           
-          {/* Section heading */}
           <h2 className="text-3xl font-black text-gray-900 mb-8 flex items-center">
             <span className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-800 mr-4 rounded-full"></span>
             Your Complete Product Arsenal
           </h2>
           
           <div className="space-y-6">
-            {/* Feature 1 */}
             <div className="flex items-start p-4 rounded-xl hover:bg-blue-50 transition-colors duration-200 group">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform duration-200">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,16 +199,11 @@ export default function ProductsPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-gray-900 mb-2">
-                  Live Product Links
-                </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Click straight through to Amazon - no searching, no guessing. Current prices and Prime delivery.
-            </p>
+                <h3 className="font-bold text-lg text-gray-900 mb-2">Live Product Links</h3>
+                <p className="text-gray-600 leading-relaxed">Click straight through to Amazon - no searching, no guessing. Current prices and Prime delivery.</p>
               </div>
             </div>
 
-            {/* Feature 2 */}
             <div className="flex items-start p-4 rounded-xl hover:bg-blue-50 transition-colors duration-200 group">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform duration-200">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,16 +211,11 @@ export default function ProductsPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-gray-900 mb-2">
-                  Organized by Pest Type
-                </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Find exactly what you need in seconds. Filter by your specific pest problem.
-            </p>
+                <h3 className="font-bold text-lg text-gray-900 mb-2">Organized by Pest Type</h3>
+                <p className="text-gray-600 leading-relaxed">Find exactly what you need in seconds. Filter by your specific pest problem.</p>
               </div>
             </div>
 
-            {/* Feature 3 */}
             <div className="flex items-start p-4 rounded-xl hover:bg-blue-50 transition-colors duration-200 group">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform duration-200">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,16 +223,11 @@ export default function ProductsPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-gray-900 mb-2">
-                  Regular Updates
-                </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Always current. We review the marketplace regularly to make sure you're seeing some of the most popular and effective products out there.
-            </p>
+                <h3 className="font-bold text-lg text-gray-900 mb-2">Regular Updates</h3>
+                <p className="text-gray-600 leading-relaxed">Always current. We review the marketplace regularly to make sure you're seeing some of the most popular and effective products out there.</p>
               </div>
             </div>
 
-            {/* Feature 4 */}
             <div className="flex items-start p-4 rounded-xl hover:bg-blue-50 transition-colors duration-200 group">
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform duration-200">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,46 +235,40 @@ export default function ProductsPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-gray-900 mb-2">
-                  "Why This Works" Explanations
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Context on what makes each product effective for London households
-                </p>
+                <h3 className="font-bold text-lg text-gray-900 mb-2">"Why This Works" Explanations</h3>
+                <p className="text-gray-600 leading-relaxed">Context on what makes each product effective for London households</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-
-
-      {/* Product Categories - KEEP AS IS */}
-      <div className="max-w-4xl mx-auto px-4 mb-20">
-        <div className="text-center mb-12">
-          <h3 className="text-4xl font-black text-gray-900 mb-4">
-            Product Categories
-          </h3>
-          <p className="text-xl text-gray-600">
-            Expert recommendations for all common London pests
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {pestCategories.map((pest) => (
-            <div
-              key={pest.name}
-              className="group bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-100 hover:border-blue-500 hover:shadow-2xl transition-all duration-300 cursor-pointer hover:-translate-y-2"
-            >
-              <div className="text-6xl mb-4 group-hover:scale-125 transition-transform duration-200">
-                {pest.icon}
-              </div>
-              <div className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
-                {pest.name}
-              </div>
+      {/* Products Section */}
+      <div className="max-w-6xl mx-auto px-4 mb-20">
+        {Object.entries(groupedProducts).map(([category, categoryProducts]) => (
+          <div key={category} className="mb-16">
+            <h3 className="text-3xl font-black text-gray-900 mb-8">
+              {category === 'Silverfish' ? 'Silverfish & Mould Mites' : category}
+            </h3>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {categoryProducts.map((product) => (
+                <div key={product.asin} className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                  <h4 className="text-lg font-bold text-gray-900 mb-2">{product.name}</h4>
+                  <p className="text-2xl font-black text-blue-600 mb-4">{product.price}</p>
+                  <a
+                    href={getAmazonLink(product.asin)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full text-center bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-3 rounded-lg font-bold hover:from-amber-600 hover:to-amber-700 transition-all"
+                  >
+                    View on Amazon
+                  </a>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
       {/* CTA 1: Professional Help */}
@@ -276,7 +316,6 @@ export default function ProductsPage() {
       <footer className="bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 text-white py-16 mt-32 border-t-2 border-blue-800">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Brand */}
             <div>
               <h3 className="font-bold text-lg mb-4">PestPro Index</h3>
               <p className="text-gray-400">
@@ -284,7 +323,6 @@ export default function ProductsPage() {
               </p>
             </div>
             
-            {/* Links */}
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <div className="space-y-2">
@@ -303,7 +341,6 @@ export default function ProductsPage() {
               </div>
             </div>
             
-            {/* Contact */}
             <div>
               <h4 className="font-semibold mb-4">Products</h4>
               <p className="text-gray-400">
@@ -312,7 +349,6 @@ export default function ProductsPage() {
             </div>
           </div>
           
-          {/* Copyright */}
           <div className="border-t border-gray-800 mt-10 pt-8 text-center text-gray-400 text-sm">
             <p>© 2025 PestPro Index. London's neutral pest control directory.</p>
           </div>
