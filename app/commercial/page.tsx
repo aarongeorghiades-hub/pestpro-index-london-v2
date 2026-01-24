@@ -474,16 +474,16 @@ export default function CommercialPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 border-l-4 border-blue-600 hover:shadow-lg transition">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Commercial Pest Control Guide</h3>
-              <p className="text-gray-700 mb-6">Comprehensive guide to commercial pest control services, including best practices for facility management and compliance requirements.</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Commercial Pest Control Procurement Guide</h3>
+              <p className="text-gray-700 mb-6">Essential guide for property managers and facilities managers. Learn how to evaluate providers, negotiate contracts that protect you, and avoid costly tie-ins. Includes RFP templates, certification verification checklists, and red flags to watch for when selecting pest control companies for multi-property portfolios.</p>
               <a href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">
                 Get the Guide - £14.99
               </a>
             </div>
 
             <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-8 border-l-4 border-amber-600 hover:shadow-lg transition">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Multi-Site Pest Management Workbook</h3>
-              <p className="text-gray-700 mb-6">Practical workbook for managing pest control across multiple locations with templates, checklists, and compliance frameworks.</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Complete Pest Control Compliance Guide for Small Business</h3>
+              <p className="text-gray-700 mb-6">Comprehensive 60-page compliance guide for restaurant owners, care homes, schools, and retail businesses. Understand FSA, CQC, and Ofsted requirements, maintain compliant records, and avoid inspection failures. Includes fillable logbooks, sector-specific checklists, and ready-to-use templates for every business type.</p>
               <a href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-lg transition">
                 Get the Workbook - £23.99
               </a>
