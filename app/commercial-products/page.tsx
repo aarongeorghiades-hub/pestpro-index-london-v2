@@ -39,16 +39,16 @@ export default function CommercialProductsPage() {
   const [submitted, setSubmitted] = useState(false);
 
   const categories: Category[] = [
+    { emoji: '🔧', name: 'Dehumidifiers (Mould Prevention)', id: 'General' },
     { emoji: '🐭', name: 'Rodents', id: 'Rodents' },
     { emoji: '🐝', name: 'Flying Insects', id: 'Flying Insects' },
     { emoji: '🪳', name: 'Cockroaches', id: 'Cockroaches' },
     { emoji: '🛏️', name: 'Bed Bugs', id: 'Bed Bugs' },
     { emoji: '🕊️', name: 'Birds', id: 'Birds' },
-    { emoji: '📦', name: 'Stored Product Insects', id: 'Stored Product Insects' },
+    { emoji: '📦', name: 'Stored Product Insects (Pantry Moths)', id: 'Stored Product Insects' },
+    { emoji: '🦋', name: 'Textile Pests (Clothes & Carpet Moths)', id: 'Textile Pests (Moths)' },
     { emoji: '🐜', name: 'Ants', id: 'Ants' },
     { emoji: '🦟', name: 'Drain Flies', id: 'Drain Flies' },
-    { emoji: '🦋', name: 'Textile Pests', id: 'Textile Pests (Moths)' },
-    { emoji: '🔧', name: 'General', id: 'General' },
   ];
 
   // Load products from database
