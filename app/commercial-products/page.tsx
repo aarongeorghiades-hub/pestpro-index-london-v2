@@ -1,52 +1,95 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/utils/supabase';
 import Link from 'next/link';
 import Image from 'next/image';
 
+const supabase = createClient();
+
 // Amazon Associates Configuration
-const AMAZON_TRACKING_ID = 'pestproindex-21'; // Active Amazon Associates Store ID
+const AMAZON_TRACKING_ID = 'pestproindex-21';
 
-/**
- * AMAZON ASSOCIATES VERIFICATION
- * Status: Active since January 24, 2026
- * Store ID: pestproindex-21
- * 
- * Test link format: https://www.amazon.co.uk/dp/B00TU1VL08?tag=pestproindex-21
- * All product links generate with this tracking parameter
- * 
- * Revenue tracking: Monitor via Amazon Associates dashboard
- */
+interface Product {
+  id: string;
+  product_context: string;
+  pest_category: string;
+  product_type: string;
+  product_name: string;
+  asin: string;
+  price_range: string;
+  notes: string;
+  is_active: boolean;
+}
 
-// Helper function to generate Amazon affiliate links
+interface Category {
+  emoji: string;
+  name: string;
+  id: string;
+}
+
 const getAmazonLink = (asin: string): string => {
   return `https://www.amazon.co.uk/dp/${asin}?tag=${AMAZON_TRACKING_ID}`;
 };
 
 export default function CommercialProductsPage() {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('rodents');
+  const [loading, setLoading] = useState(true);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (email) {
-      setSubmitted(true);
-      setEmail('');
-      setTimeout(() => setSubmitted(false), 3000);
-    }
-  }
-
-  const pestCategories = [
-    { name: 'Rodents (Mice & Rats)', icon: '🐭' },
-    { name: 'Flying Insects (Flies, Wasps)', icon: '🐝' },
-    { name: 'Cockroaches', icon: '🪳' },
-    { name: 'Bed Bugs (Hotels)', icon: '🛏️' },
-    { name: 'Birds (Pigeons)', icon: '🕊️' },
-    { name: 'Stored Product Insects', icon: '📦' },
-    { name: 'Ants', icon: '🐜' },
-    { name: 'Drain Flies', icon: '🦟' },
-    { name: 'Textile Pests (Moths)', icon: '🦋' }
+  const categories: Category[] = [
+    { emoji: '🐭', name: 'Rodents', id: 'Rodents' },
+    { emoji: '🐝', name: 'Flying Insects', id: 'Flying Insects' },
+    { emoji: '🪳', name: 'Cockroaches', id: 'Cockroaches' },
+    { emoji: '🛏️', name: 'Bed Bugs', id: 'Bed Bugs' },
+    { emoji: '🕊️', name: 'Birds', id: 'Birds' },
+    { emoji: '📦', name: 'Stored Product Insects', id: 'Stored Product Insects' },
+    { emoji: '🐜', name: 'Ants', id: 'Ants' },
+    { emoji: '🦟', name: 'Drain Flies', id: 'Drain Flies' },
+    { emoji: '🦋', name: 'Textile Pests', id: 'Textile Pests (Moths)' },
+    { emoji: '🔧', name: 'General', id: 'General' },
   ];
+
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('amazon_products')
+          .select('*')
+          .eq('product_context', 'commercial')
+          .eq('is_active', true)
+          .order('pest_category', { ascending: true });
+
+        if (error) throw error;
+
+        console.log('Loaded commercial products:', data?.length);
+        setProducts(data || []);
+      } catch (error) {
+        console.error('Error loading products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  // Get products for selected category
+  const categoryProducts = products.filter(
+    p => p.pest_category === selectedCategory
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading commercial products...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -78,7 +121,7 @@ export default function CommercialProductsPage() {
             <Link href="/products" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
               Home Products
             </Link>
-            <Link href="/commercial-products" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+            <Link href="/commercial-products" className="px-6 py-2.5 font-medium text-base border-2 white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
               Commercial Products
             </Link>
             <Link href="/about" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
@@ -91,9 +134,8 @@ export default function CommercialProductsPage() {
         </div>
       </nav>
 
-      {/* Hero Section - DARK BLUE */}
+      {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 py-20 overflow-hidden">
-        {/* Decorative pattern */}
         <div className="absolute inset-0 opacity-5">
           <div 
             className="absolute inset-0" 
@@ -105,7 +147,6 @@ export default function CommercialProductsPage() {
         </div>
         
         <div className="relative max-w-4xl mx-auto px-4">
-          {/* Coming Soon Badge */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-100 to-amber-200 text-amber-900 px-6 py-3 rounded-full text-sm font-bold shadow-lg border-2 border-amber-300">
               <svg className="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
@@ -115,22 +156,19 @@ export default function CommercialProductsPage() {
             </div>
           </div>
 
-          {/* Main Heading - WHITE and HUGE */}
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[0.9] tracking-tight text-center">
             Commercial<br />Pest Control<br />Products
           </h1>
           
-          {/* Subtitle - WHITE text with bold emphasis */}
           <p className="text-xl md:text-2xl text-blue-100/90 max-w-3xl mx-auto leading-relaxed font-medium text-center">
             Professional-grade solutions for businesses, facilities, and multi-site operations. <span className="font-bold text-white">Direct Amazon links for bulk ordering</span>. Trusted by commercial pest control providers across London.
           </p>
         </div>
       </div>
 
-      {/* Features Box - Premium Card with NEGATIVE MARGIN OVERLAP */}
+      {/* Features Box */}
       <div className="max-w-4xl mx-auto px-4 -mt-20 mb-16">
         <div className="relative bg-white rounded-3xl shadow-2xl p-10 border border-gray-100 hover:shadow-3xl transition-shadow duration-300">
-          {/* Top accent bar */}
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 rounded-t-3xl"></div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -153,127 +191,113 @@ export default function CommercialProductsPage() {
         </div>
       </div>
 
-
-
-      {/* Pest Categories Grid */}
+      {/* Category Navigation */}
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-black text-gray-900 text-center mb-12">Commercial Pest Solutions by Category</h2>
+        <h2 className="text-4xl font-black text-gray-900 text-center mb-12">Browse by Category</h2>
         
-        <div className="grid md:grid-cols-3 gap-6">
-          {pestCategories.map((category) => (
-            <div key={category.name} className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 hover:shadow-lg transition-shadow border border-blue-200">
-              <div className="text-6xl mb-4">{category.icon}</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{category.name}</h3>
-              <p className="text-gray-700 mb-6">Professional-grade solutions and equipment for commercial pest control</p>
-              <button className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
-                View Products →
-              </button>
-            </div>
+        <div className="grid md:grid-cols-5 gap-4">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => {
+                setSelectedCategory(category.id);
+                document.getElementById(`products-${category.id}`)?.scrollIntoView({ 
+                  behavior: 'smooth' 
+                });
+              }}
+              className={`p-6 rounded-2xl transition-all text-center ${
+                selectedCategory === category.id
+                  ? 'bg-blue-600 text-white shadow-lg scale-105'
+                  : 'bg-blue-50 text-gray-900 hover:bg-blue-100 border border-blue-200'
+              }`}
+            >
+              <div className="text-4xl mb-2">{category.emoji}</div>
+              <div className="font-bold text-sm">{category.name}</div>
+              <div className="text-xs mt-2 opacity-75">
+                {products.filter(p => p.pest_category === category.id).length} products
+              </div>
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Featured Products Section */}
+      {/* Products by Category */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-black text-gray-900 text-center mb-12">Featured Commercial Products</h2>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-blue-600">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Professional Rodent Control Kit</h3>
-              <p className="text-gray-700 mb-4">Complete commercial-grade rodent management system with traps, baits, and monitoring equipment</p>
-              <div className="flex items-center justify-between">
-                <span className="text-3xl font-black text-blue-600">£89.99</span>
-                <a href="https://www.amazon.co.uk/dp/B00TU1VL08?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
-                  View on Amazon
-                </a>
-              </div>
-            </div>
+          {categories.map((category) => {
+            const categoryProds = products.filter(p => p.pest_category === category.id);
+            
+            if (categoryProds.length === 0) return null;
 
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-blue-600">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Commercial Insect Spray System</h3>
-              <p className="text-gray-700 mb-4">Heavy-duty spraying equipment for large facilities and multi-site operations</p>
-              <div className="flex items-center justify-between">
-                <span className="text-3xl font-black text-blue-600">£149.99</span>
-                <a href="https://www.amazon.co.uk/dp/B07Y5KXQKK?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
-                  View on Amazon
-                </a>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-blue-600">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Professional Bed Bug Treatment Kit</h3>
-              <p className="text-gray-700 mb-4">Commercial-strength bed bug detection and treatment solution for hotels and hospitality</p>
-              <div className="flex items-center justify-between">
-                <span className="text-3xl font-black text-blue-600">£199.99</span>
-                <a href="https://www.amazon.co.uk/dp/B08QBVVQY8?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
-                  View on Amazon
-                </a>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-blue-600">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Bird Control & Proofing System</h3>
-              <p className="text-gray-700 mb-4">Complete bird deterrent and proofing solution for commercial buildings and facilities</p>
-              <div className="flex items-center justify-between">
-                <span className="text-3xl font-black text-blue-600">£249.99</span>
-                <a href="https://www.amazon.co.uk/dp/B07YFVVVV7?tag=pestproindex-21" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
-                  View on Amazon
-                </a>
-              </div>
-            </div>
-          </div>
+            return (
+              <section 
+                key={category.id} 
+                id={`products-${category.id}`}
+                className="mb-16"
+              >
+                <h3 className="text-3xl font-bold text-gray-900 mb-8">
+                  {category.emoji} {category.name}
+                </h3>
+                
+                <div className="grid gap-6">
+                  {categoryProds.map((product) => (
+                    <a
+                      key={product.id}
+                      href={getAmazonLink(product.asin)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border-l-4 border-blue-600 hover:border-blue-800"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <h4 className="text-xl font-bold text-gray-900 flex-1">
+                          {product.product_name}
+                        </h4>
+                        <span className="text-2xl font-bold text-blue-600 ml-4">
+                          {product.price_range}
+                        </span>
+                      </div>
+                      
+                      <p className="text-sm text-gray-600 mb-3">
+                        {product.product_type.replace(/_/g, ' ').toUpperCase()}
+                      </p>
+                      
+                      {product.notes && (
+                        <p className="text-sm text-gray-700 mb-4">{product.notes}</p>
+                      )}
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">
+                          Amazon UK • ASIN: {product.asin}
+                        </span>
+                        <button className="bg-orange-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 transition-colors">
+                          View on Amazon →
+                        </button>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
 
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-black mb-6">Ready to upgrade your commercial pest control product set?</h2>
-          <p className="text-xl mb-8 text-blue-100">Browse our complete selection of professional-grade pest control products and equipment</p>
-          <button className="px-10 py-4 bg-white text-blue-600 font-bold text-lg rounded-lg hover:bg-blue-50 transition">
-            Browse All Commercial Products
-          </button>
+          <h2 className="text-4xl font-black mb-6">Need Help Finding the Right Products?</h2>
+          <p className="text-xl mb-8 opacity-90">Contact our team for personalized recommendations for your commercial pest control needs</p>
+          <Link href="/contact" className="inline-block px-8 py-4 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition">
+            Get Expert Advice
+          </Link>
         </div>
       </div>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="text-white font-bold mb-4">Navigation</h4>
-              <ul className="space-y-2">
-                <li><Link href="/" className="hover:text-white transition">Home</Link></li>
-                <li><Link href="/residential" className="hover:text-white transition">Residential</Link></li>
-                <li><Link href="/commercial" className="hover:text-white transition">Commercial</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4">Resources</h4>
-              <ul className="space-y-2">
-                <li><Link href="/about" className="hover:text-white transition">About</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4">Products</h4>
-              <ul className="space-y-2">
-                <li><Link href="/products" className="hover:text-white transition">Home Products</Link></li>
-                <li><Link href="/commercial-products" className="hover:text-white transition">Commercial Products</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4">Legal</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center">
-            <p>&copy; 2024 PestPro Index. All rights reserved.</p>
-          </div>
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <p className="mb-4">&copy; 2026 PestPro Index. All rights reserved.</p>
+          <p className="text-sm">Amazon Associates: We earn commissions from qualifying purchases through Amazon Associates links</p>
         </div>
       </footer>
     </div>
