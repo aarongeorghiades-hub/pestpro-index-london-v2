@@ -34,8 +34,9 @@ const getAmazonLink = (asin: string): string => {
 
 export default function CommercialProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('rodents');
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   const categories: Category[] = [
     { emoji: '🐭', name: 'Rodents', id: 'Rodents' },
@@ -59,7 +60,8 @@ export default function CommercialProductsPage() {
           .select('*')
           .eq('product_context', 'commercial')
           .eq('is_active', true)
-          .order('pest_category', { ascending: true });
+          .order('pest_category', { ascending: true })
+          .order('product_name', { ascending: true });
 
         if (error) throw error;
 
@@ -75,20 +77,25 @@ export default function CommercialProductsPage() {
     loadProducts();
   }, []);
 
-  // Get products for selected category
-  const categoryProducts = products.filter(
-    p => p.pest_category === selectedCategory
-  );
+  // Group products by category
+  const groupedProducts: Record<string, Product[]> = {};
+  products.forEach(product => {
+    if (!groupedProducts[product.pest_category]) {
+      groupedProducts[product.pest_category] = [];
+    }
+    groupedProducts[product.pest_category].push(product);
+  });
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading commercial products...</p>
-        </div>
-      </div>
-    );
+  // Get categories that have products
+  const categoriesWithProducts = categories.filter(cat => groupedProducts[cat.id]?.length > 0);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (email) {
+      setSubmitted(true);
+      setEmail('');
+      setTimeout(() => setSubmitted(false), 3000);
+    }
   }
 
   return (
@@ -121,7 +128,7 @@ export default function CommercialProductsPage() {
             <Link href="/products" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
               Home Products
             </Link>
-            <Link href="/commercial-products" className="px-6 py-2.5 font-medium text-base border-2 white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
+            <Link href="/commercial-products" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
               Commercial Products
             </Link>
             <Link href="/about" className="px-6 py-2.5 font-medium text-base border-2 border-white/40 rounded-xl transition-all duration-200 bg-transparent text-white hover:border-white/60 hover:bg-white/10">
@@ -191,104 +198,103 @@ export default function CommercialProductsPage() {
         </div>
       </div>
 
-      {/* Category Navigation */}
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-black text-gray-900 text-center mb-12">Browse by Category</h2>
-        
-        <div className="grid md:grid-cols-5 gap-4">
+      {/* Category Navigation Cards */}
+      <div className="max-w-6xl mx-auto px-4 mb-20">
+        <h3 className="text-3xl font-black text-gray-900 mb-8 text-center">Jump to Your Pest</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {categories.map((category) => (
-            <button
+            <a
               key={category.id}
-              onClick={() => {
-                setSelectedCategory(category.id);
-                document.getElementById(`products-${category.id}`)?.scrollIntoView({ 
-                  behavior: 'smooth' 
-                });
-              }}
-              className={`p-6 rounded-2xl transition-all text-center ${
-                selectedCategory === category.id
-                  ? 'bg-blue-600 text-white shadow-lg scale-105'
-                  : 'bg-blue-50 text-gray-900 hover:bg-blue-100 border border-blue-200'
-              }`}
+              href={`#${category.id}`}
+              className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 hover:shadow-2xl hover:border-blue-500 transition-all duration-300 p-8 text-center group cursor-pointer"
             >
-              <div className="text-4xl mb-2">{category.emoji}</div>
-              <div className="font-bold text-sm">{category.name}</div>
-              <div className="text-xs mt-2 opacity-75">
-                {products.filter(p => p.pest_category === category.id).length} products
-              </div>
-            </button>
+              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">{category.emoji}</div>
+              <h3 className="font-bold text-xl text-gray-900 mb-2">{category.name}</h3>
+              <p className="text-sm text-gray-600">{groupedProducts[category.id]?.length || 0} products</p>
+            </a>
           ))}
         </div>
       </div>
 
-      {/* Products by Category */}
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          {categories.map((category) => {
-            const categoryProds = products.filter(p => p.pest_category === category.id);
-            
-            if (categoryProds.length === 0) return null;
-
-            return (
-              <section 
-                key={category.id} 
-                id={`products-${category.id}`}
-                className="mb-16"
-              >
-                <h3 className="text-3xl font-bold text-gray-900 mb-8">
-                  {category.emoji} {category.name}
-                </h3>
-                
-                <div className="grid gap-6">
-                  {categoryProds.map((product) => (
+      {/* Products Section */}
+      <div className="max-w-6xl mx-auto px-4 mb-20">
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">Loading products...</p>
+          </div>
+        ) : categoriesWithProducts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No products available at the moment.</p>
+          </div>
+        ) : (
+          categoriesWithProducts.map((category) => (
+            <section key={category.id} id={category.id} className="mb-16 scroll-mt-20">
+              <h3 className="text-3xl font-black text-gray-900 mb-8">
+                {category.emoji} {category.name}
+              </h3>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {groupedProducts[category.id]?.map((product) => (
+                  <div key={product.id} className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 p-6">
+                    <h4 className="text-lg font-bold text-gray-900 mb-3">{product.product_name}</h4>
+                    
+                    <p className="text-sm text-gray-600 mb-3 capitalize">{product.product_type.replace(/_/g, ' ')}</p>
+                    
+                    <p className="text-2xl font-black text-blue-600 mb-4">{product.price_range}</p>
+                    
+                    <p className="text-xs text-gray-500 mb-4">{product.notes}</p>
+                    
                     <a
-                      key={product.id}
                       href={getAmazonLink(product.asin)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border-l-4 border-blue-600 hover:border-blue-800"
+                      className="block w-full text-center bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-3 rounded-lg font-bold hover:from-amber-600 hover:to-amber-700 transition-all"
                     >
-                      <div className="flex justify-between items-start mb-3">
-                        <h4 className="text-xl font-bold text-gray-900 flex-1">
-                          {product.product_name}
-                        </h4>
-                        <span className="text-2xl font-bold text-blue-600 ml-4">
-                          {product.price_range}
-                        </span>
-                      </div>
-                      
-                      <p className="text-sm text-gray-600 mb-3">
-                        {product.product_type.replace(/_/g, ' ').toUpperCase()}
-                      </p>
-                      
-                      {product.notes && (
-                        <p className="text-sm text-gray-700 mb-4">{product.notes}</p>
-                      )}
-                      
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-500">
-                          Amazon UK • ASIN: {product.asin}
-                        </span>
-                        <button className="bg-orange-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 transition-colors">
-                          View on Amazon →
-                        </button>
-                      </div>
+                      View on Amazon
                     </a>
-                  ))}
-                </div>
-              </section>
-            );
-          })}
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))
+        )}
+      </div>
+
+      {/* CTA 1: Professional Help */}
+      <div className="max-w-4xl mx-auto px-4 mb-12">
+        <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-3xl p-12 border border-gray-200 text-center">
+          <p className="text-gray-700 mb-6 text-xl font-medium">
+            Need professional help instead?
+          </p>
+          <Link
+            href="/commercial"
+            className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-10 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-blue-900 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 text-lg"
+          >
+            <span>Find Commercial Providers</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
       </div>
 
-      {/* CTA Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-black mb-6">Need Help Finding the Right Products?</h2>
-          <p className="text-xl mb-8 opacity-90">Contact our team for personalized recommendations for your commercial pest control needs</p>
-          <Link href="/contact" className="inline-block px-8 py-4 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition">
-            Get Expert Advice
+      {/* CTA 2: Residential Products */}
+      <div className="max-w-4xl mx-auto px-4 mb-20">
+        <div className="bg-white rounded-3xl p-12 border-2 border-blue-200 text-center shadow-xl">
+          <h3 className="text-3xl font-black text-gray-900 mb-4">
+            Looking for Residential Products?
+          </h3>
+          <p className="text-gray-700 mb-6 text-lg">
+            Browse our curated selection of home pest control solutions
+          </p>
+          <Link
+            href="/products"
+            className="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-10 py-4 rounded-xl font-bold hover:from-amber-600 hover:to-amber-700 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 text-lg"
+          >
+            <span>Browse Home Products</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
         </div>
       </div>
